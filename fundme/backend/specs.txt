@@ -1,0 +1,73 @@
+routes:
+  user-routes:
+    post: make user
+    post: add project to db
+    post: fund a project*
+    put: update project
+    get: search projects
+      basis:  name
+              category
+              popularity
+              proximity
+    delete: delete user
+    delete: delete project
+  
+  app-routes:
+    get: get projects from db
+      basis:  name
+              category
+              popularity
+              proximity
+    get: get user in db
+
+
+schemas:
+  project:
+    name: string
+    verified: boolean
+    description: string
+    cover_image: string
+    category: string
+    owner: userSchema
+    location: 
+      country: string 
+      town:    string
+    target: number
+    current: number
+    currency: string
+    deposit_account: number
+    funders: array
+      funder: funderSchema
+  
+  user:
+    name: string
+    email: string
+    password: string
+    NIN: string
+    telephones: array
+      contact: string
+  
+  funder:
+    name: string
+    email: string 
+    telephone: string
+    tip: number
+    funding_value: Number
+
+
+project_categories:
+  Animals and pets 
+  Children and youth
+  Creative arts and culture
+  Disability support
+  Emergencies
+  Gardens and environments
+  Health and medical
+  In memory
+  Volunteering
+  Local community
+  Politics
+  Schools and education
+  Sports
+  Personal project
+
