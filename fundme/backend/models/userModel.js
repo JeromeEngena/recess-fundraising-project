@@ -16,18 +16,26 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-export default User = mongoose.model('User', new Schema({
-  name: { type: String, required: true },
+module.exports = mongoose.model('User', new Schema({
+  name: { type: String, required: true, immutable: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
   NIN: { type: String, default: null },
   verified: { type: Boolean, default: false },
-  telephone: { type: [{ type: String, validate: [ arrayLength, 'User should have at least one telephone number' ] }] },
+  active: { type: Boolean, default: true },
+  contact: {
+    verified: { type: Boolean, default: false },
+    telephone: { type: String, required: true }
+  },
   location: {
-    country: { type: String, required: true, default: 'Uganda' }
+    country: { type: String, required: true, default: 'Uganda' },
+    precise: {
+      type: { type: String, enum: ['Point'], default: 'Point' },
+      coordinates: { type: [Number] }
+    }
   },
   projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
-  _dateClosed: { type: Date }
+  _dateClosed: { type: Date, default: null, immutable: true }
 }, {
   collection: 'users',
   minimize: false,
@@ -38,7 +46,3 @@ export default User = mongoose.model('User', new Schema({
     updatedAt: '_dateUpdated'
   }
 }))
-
-function arrayLength(val) {
-  return val.length > 0
-}

@@ -3,7 +3,7 @@
  * name: String
  * email: String
  * telephone: String
- * location: {
+ * location: [{
  *  country: string
  *  precise: {
  *    type: {
@@ -13,7 +13,7 @@
  *      }
  *    }
  *   }
- * }
+ * }]
  * projects_funded: [{
  *   _id: projectID
  *   currency: String
@@ -28,23 +28,24 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-export default Funder = mongoose.model('Funder', new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  telephone: { type: String, required: true },
-  location: {
-    country: { type: String, default: 'Uganda' },
-    precise: {
-      type: { type: String, enum: ['Point'], required: true },
-      coordinates: { type: [Number], required: true }
-    }
-  },
+module.exports = mongoose.model('Funder', new Schema({
+  name: { type: String, required: true, immutable: true },
+  email: { type: String, default: null },
+  telephone: { type: String, required: true, immutable: true },
   projects_funded: [{
     _id: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
-    currency: { type: String, enum: ['UGX'], required: true },
+    open_profile: { type: Boolean, default: false, required: true },
+    currency: { type: String, default: 'UGX', enum: ['UGX'], required: true },
     donation: { type: Number, required: true },
     tip: { type: Number, default: 0, required: true },
-    date: { type: Date, required: true }
+    date: { type: Date, default: Date.now, required: true },
+    location: [{
+      country: { type: String, default: 'Uganda', enum: ['Uganda'] },
+      precise: {
+        type: { type: String, enum: ['Point'], required: true },
+        coordinates: { type: [Number], required: true }
+      }
+    }]
   }]
 }, {
   collection: 'funders',

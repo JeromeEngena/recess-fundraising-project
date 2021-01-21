@@ -47,10 +47,10 @@ const categories = [
   "Nature"
 ]
 
-export default Project = mongoose.model('Project', new Schema({
+module.exports = mongoose.model('Project', new Schema({
   name: { type: String, required: true },
-  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  active: { type: Boolean, required: true, default: true },
+  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true, immutable: true },
+  active: { type: Boolean, default: true },
   verified: { type: Boolean, default: false },
   description: {
     body: { type: String, required: true },
@@ -59,14 +59,16 @@ export default Project = mongoose.model('Project', new Schema({
       title: { type: String, required: true }
     }],
     category: { type: String, required: true, default: 'Personal', enum: categories },
-    country: { type: String }
+    country: { type: String, required: true, default: 'Uganda' }
   },  
   stats: {
-    target: { type: Number },
-    current: { type: Number },
+    target: { type: Number, required: true },
+    current: { type: Number, default: 0 },
     funders: [{ type: Schema.Types.ObjectId, ref: 'Funder' }],
+    thanks: { type: String, default: null },
     comments: [{
-      comment: { type: String },
+      _id: { type: Schema.Types.ObjectId, required: true },
+      comment: { type: String, required: true },
       funder: { type: Schema.Types.ObjectId, required: true, ref: 'Funder' }
     }]
   },

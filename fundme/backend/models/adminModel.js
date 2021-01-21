@@ -34,12 +34,12 @@
   },
  }
 
- export default Admin = mongoose.model('Admin', new Schema({
-   name: { type: String, required: true },
+module.exports = mongoose.model('Admin', new Schema({
+   name: { type: String, required: true, immutable: true },
    email: { type: String, required: true },
    password: { type: String, required: true },
    telephone: { type: String, required: true },
-   NIN: { type: String, required: true },
+   NIN: { type: String, required: true, immutable: true },
    authorized: { type: Boolean, required: true, default: false },
    active: { type: Boolean, required: true, default: getStatus },
    roles: [{

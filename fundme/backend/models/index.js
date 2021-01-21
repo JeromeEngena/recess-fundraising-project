@@ -1,5 +1,5 @@
-exports.userModel = require('./userModel')
-exports.funderModel = require('./funderModel')
-exports.projectModel = require('./projectModel')
+exports.User = require('./userModel')
+exports.Funder = require('./funderModel')
+exports.Project = require('./projectModel')
 
-exports.adminModel = require('./adminModel')
+exports.Admin = require('./adminModel')
