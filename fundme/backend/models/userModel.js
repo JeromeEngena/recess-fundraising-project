@@ -17,7 +17,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 module.exports = mongoose.model('User', new Schema({
-  name: { type: String, required: true, immutable: true },
+  first_name: { type: String, required: true, immutable: true },
+  last_name: { type: String, required: true, immutable: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
   NIN: { type: String, default: null },

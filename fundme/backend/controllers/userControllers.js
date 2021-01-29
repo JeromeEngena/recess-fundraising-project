@@ -14,7 +14,7 @@
  */
 
 const bcrypt = require('bcrypt')
-const { User } = require('../models')
+const { User, Project } = require('../models')
 
 async function hashPassword(password, callback) {
   const SALT_ROUNDS = 10
@@ -33,7 +33,7 @@ async function comparePasswords(plaintextPassword, hashedPassword, callback) {
   })
 }
 
-function makeError(error, message) { // handle status codes
+function makeError(error, message) { // handle status codes and check for request.methods always
   return {
     Message: message,
     Error: error
@@ -49,47 +49,72 @@ function makeData(data) {
 
 module.exports = {
   registerUser: (req, res, next) => {
-    // ensure no user exist with similar email and telephone number
-    const {name, email, telephone, password } = req.body
-    hashPassword(password, (error, hashedPassword) => {
-        if (error)
-          res.json(makeError(error, 'HASHING OF PASSWORD FAILED!'))
-        const user = new User({
-          name: name,
-          email: email,
-          contact: {telephone: telephone },
-          password: hashedPassword
-        })
-        user.save((error, user) => {
+    const {first_name, last_name, email, telephone, password } = req.body
+    User.exists({ $or: [{ email: email }, { 'contact.telephone': telephone }] }, (error, userExists) => {
+      if (error) {
+        res.json(makeError(error, `FAILED TO QUERY USER WITH EMAIL ${email} OR TELEPHONE ${telephone}.`))
+      }
+      
+      if (userExists) {
+        res.json(makeError(`USER WITH EMAIL ${email} OR WITH TELEPHONE ${telephone} ALREADY EXISTS`))
+      } else {
+        hashPassword(password, (error, hashedPassword) => {
           if (error)
-            res.json(makeError(error, 'FAILED TO REGISTER USER!'))
-          res.json(makeData(user))
-        })
-    }) 
+            res.json(makeError(error, 'HASHING OF USER PASSWORD FAILED!'))
+          const user = new User({
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            contact: {telephone: telephone },
+            password: hashedPassword
+          })
+          user.save((error, user) => {
+            if (error)
+              res.json(makeError(error, 'FAILED TO REGISTER USER!'))
+            res.json(makeData(user))
+          })
+        }) 
+      }
+    })
   },
 
   loginUser: (req, res, next) => {
+    // generate session token and send it to client
     const { email, password } = req.body
     User.findOne({ email: email }, (error, user) => {
       if (error)
-        res.json(makeError(error, `FAILED TO FIND USER WITH EMAIL ${email}`))
-      comparePasswords(password, user.password, (error, result) => {
+        res.json(makeError(error, `FAILED TO FIND USER WITH EMAIL ${email}.`))
+        comparePasswords(password, user.password, (error, result) => {
         if (error)
-          res.json(makeError(error), `PASSWORD COMPARISON FAILED!`)
+          res.json(makeError(error, `PASSWORD COMPARISON FAILED!`))
         res.json(makeData(user))
       })
     })
   },
 
-  updateUser: (req, res, next) =>  {
-    const { id, password, NIN,  } = req.params
+  // updateUser: (req, res, next) =>  {
 
-  },
+  //   User.findById(req.params.id, (error, user) => {
+  //     if (error) 
+  //       res.json(makeError(error, `FAILED TO FIND USER WITH ID ${req.params.id}`))
+
+  //     if (user) {
+  //       // const { password, email, telephone, verified, active } = req.body
+  //       const updatedFields = {}
+  //       Object.entries(req.body).forEach((key,value) => {
+  //         if (key === 'telephone' || key === 'verified') {
+  //           User.updateOne(user.id, { [`contact.${key}`]: value })
+  //         } else {
+  //           User.updateOne(user.id, {  })
+  //         }
+  //       })
+  //   })
+  // },
 
   getAllUsers: (req, res, next) => {
     User.find({}, (error, users) => {
       if (error)
-        res.json(makeError(error, 'FAILED TO GET THE USERS'))
+        res.json(makeError(error, 'FAILED TO GET ALL THE USERS!'))
       res.json(makeData(users))
     })
   },
@@ -122,9 +147,8 @@ module.exports = {
     })        
   },
 
-  verifyUser: (req, res, next) => {
+  verifyUser: (req, res, next) => { // add this to schema, so user is automatically verified on NIN being presented
     const { id } = req.params
-    // change NIN : req.params.NIN and contact.verified: true
     User.findByIdAndUpdate(id, { verified: true }, { new: true }, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO VERIFY USER WITH ID: ${id}`))
@@ -132,9 +156,17 @@ module.exports = {
     })
   }, 
 
+  forgotPassword: (req, res, next) => {
+
+  },
+
+  resetPassword: (req, res, next) => {
+
+  },
+
   setUserLocation: (req, res, next) => {
     const { id, lat, long } = req.params
-    User.findByIdAndUpdate(id, { coordinates: [ lat, long ] }, { new: true }, (error, user) => {
+    User.findByIdAndUpdate(id, { ['location.precise.coordinates']: [ lat, long ] }, { new: true }, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO UPDATE PRECISE LOCATION OF USER WITH ID: ${id}`))
       res.json(makeData(user.location))
@@ -143,11 +175,21 @@ module.exports = {
 
   getUserProjects: (req, res, next) => {
     const { id } = req.params
-    // use an aggregator to return only user projects
     User.findById(id, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO FIND USER WITH ID: ${id}`))
-      res.json(makeData(user.project))
+
+        Project.find({ _id: { $in: user.projects } }, (error, projects) => {
+          if (error) 
+            res.json(makeError(error, `FAILED TO GET PROJECTS OF USER WITH ID ${id}`))
+          res.json(makeData(projects))
+        })
     })
-  }
+  },
+
+  addToUserProjects: (req, res, next) => {
+
+  },
+
+
  }

@@ -8,3 +8,20 @@
  * post:    add thanks message to project
  * post:    reply to comment on project  
  */
+
+const express = require('express')
+const router = express.Router()
+
+const { Project } = require('../controllers')
+
+router.post('/', Project.createProject)
+router.get('/', Project.getAllProjects)
+router.get('/:id', Project.getSingleProject)
+router.delete('/:id', Project.deleteProject)
+router.post('/deactivate/:id', Project.deactivateProject)
+router.post('/verify/:id', Project.verifyProject)
+router.post('/current/:id', Project.setCurrent)
+router.post('/thanks', Project.setThankYou)
+route.get('/funders', Project.getFunders)
+
+module.exports = router

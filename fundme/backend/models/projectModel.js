@@ -48,7 +48,7 @@ const categories = [
 ]
 
 module.exports = mongoose.model('Project', new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, immutable: true },
   owner: { type: Schema.Types.ObjectId, ref: 'User', required: true, immutable: true },
   active: { type: Boolean, default: true },
   verified: { type: Boolean, default: false },
@@ -56,21 +56,32 @@ module.exports = mongoose.model('Project', new Schema({
     body: { type: String, required: true },
     cover_images: [{
       path: { type: String, required: true },
-      title: { type: String, required: true }
+      title: { type: String, required: true },
+      dimensions: {
+        width: { type: Number, required: true },
+        height: { type: Number, required: true }
+      }
     }],
     category: { type: String, required: true, default: 'Personal', enum: categories },
     country: { type: String, required: true, default: 'Uganda' }
   },  
   stats: {
+    curreny: { type: String, default: 'UGX' },
     target: { type: Number, required: true },
     current: { type: Number, default: 0 },
-    funders: [{ type: Schema.Types.ObjectId, ref: 'Funder' }],
+    funders: [{
+      funderId: { type: Schema.Types.ObjectId, ref: 'Funder', required: true },
+      amount: { type: Number, required: true },
+      curreny: { type: String, default: 'UGX' },
+      time: { type: String, required: true }
+    }],
     thanks: { type: String, default: null },
-    comments: [{
-      _id: { type: Schema.Types.ObjectId, required: true },
-      comment: { type: String, required: true },
-      funder: { type: Schema.Types.ObjectId, required: true, ref: 'Funder' }
-    }]
+    // comments: [{
+    //   _id: { type: Schema.Types.ObjectId },
+    //   comment: { type: String, required: true },
+    //   time: { type: String, required: true },
+    //   owner: { type: Schema.Types.ObjectId, required: true, ref: 'Funder' }
+    // }]
   },
   _dateClosed: { type: Date }
 }, {
