@@ -15,6 +15,7 @@
 
 const bcrypt = require('bcrypt')
 const { User, Project } = require('../models')
+const jwtAuth = require('../services/Auth/AuthController')
 
 async function hashPassword(password, callback) {
   const SALT_ROUNDS = 10
@@ -27,9 +28,11 @@ async function hashPassword(password, callback) {
 
 async function comparePasswords(plaintextPassword, hashedPassword, callback) {
   await bcrypt.compare(plaintextPassword, hashedPassword, (error, result) => {
-    if (error)
+    if (error) {
       callback(error, null)
-    callback(null, result)
+    } else {
+      callback(null, result)
+    }
   })
 }
 
@@ -56,7 +59,7 @@ module.exports = {
       }
       
       if (userExists) {
-        res.json(makeError(`USER WITH EMAIL ${email} OR WITH TELEPHONE ${telephone} ALREADY EXISTS`))
+        res.json(makeError(`USER WITH EMAIL ${email} OR WITH TELEPHONE ${telephone} ALREADY EXISTS.`))
       } else {
         hashPassword(password, (error, hashedPassword) => {
           if (error)
@@ -71,7 +74,7 @@ module.exports = {
           user.save((error, user) => {
             if (error)
               res.json(makeError(error, 'FAILED TO REGISTER USER!'))
-            res.json(makeData(user))
+            res.json(user)
           })
         }) 
       }
@@ -79,15 +82,20 @@ module.exports = {
   },
 
   loginUser: (req, res, next) => {
-    // generate session token and send it to client
     const { email, password } = req.body
     User.findOne({ email: email }, (error, user) => {
       if (error)
-        res.json(makeError(error, `FAILED TO FIND USER WITH EMAIL ${email}.`))
-        comparePasswords(password, user.password, (error, result) => {
+        res.json({ status: 500, message: 'Error on the server' })
+      if (!user)
+        res.json({ status: 404, message: 'No user found' })
+
+      comparePasswords(password, user.password, (error, passwordsMatch) => {
         if (error)
-          res.json(makeError(error, `PASSWORD COMPARISON FAILED!`))
-        res.json(makeData(user))
+          res.json(({ status: 500, message: 'Error on server', auth: false, token: null })) 
+        if (!passwordsMatch) 
+          res.json(makeData({ status: 401, message: 'Unauthorized', auth: false, token: null }))
+          
+        res.json({ status: 200, auth: true, accessToken: jwtAuth.generateAccessToken(user._id), refreshToken: jwtAuth.generateRefreshToken(user._id) })
       })
     })
   },
@@ -130,8 +138,7 @@ module.exports = {
 
   deactivateUser: (req, res, next) => {
     const { id } = req.params
-    // change _dateClosed: Date.now()
-    User.findByIdAndUpdate(id, { active: false }, { new: true }, (error, user) => {
+    User.findByIdAndUpdate(id, { active: false, _dateClosed: new Date().toLocaleString() }, { new: true }, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO DEACTIVATE USER WITH ID ${id}`))
       res.json(makeData(user))
@@ -140,7 +147,7 @@ module.exports = {
 
   deleteUser: (req, res, next) => {
     const { id } = req.params
-    User.findOneAndDelete({ _id: id }, (error, user) => {
+    User.findByIdAndDelete(id, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO FIND AND DELETER USER WITH ID ${id}`))
       res.json(makeData(user))
@@ -191,5 +198,15 @@ module.exports = {
 
   },
 
+  setThankYou: (req, res, next) =>  {
+    const { id } = req.params
+    const { thanks } = req.body
+    Project.findByIdAndUpdate(id, { thanks: thanks }, { new: true }, (error, project) => {
+      if (error) 
+        res.json(makeError(error, `FAILED TO SET THANK YOU MESSAGE TO PROJECT WITH ID ${id}`))
+        // send email to all visible funders with nodemailer
+      res.json(makeData(projects))
+    })
+   }
 
  }

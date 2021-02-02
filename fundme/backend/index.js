@@ -7,12 +7,13 @@ const colors = require('colors')
 const cors = require('cors')
 
 // module configurations
-const { userRoutes } = require('./routes')
+const { userRoutes, projectRoutes, funderRoutes } = require('./routes')
 
 
 // base constants
 const app = express()
 const PORT = process.env.PORT || 4000
+// const corsOptions = { origin: 'http://localhost:3000', optionSuccessStatus: 200 }
 
 // middle ware
 app.use(express.static('public')) 
@@ -20,7 +21,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 app.use('/users', userRoutes)
-
+app.use('/projects', projectRoutes)
+app.use('/funders', funderRoutes)
 
 // db connections
 mongoose.connect(process.env.DB_URI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true})

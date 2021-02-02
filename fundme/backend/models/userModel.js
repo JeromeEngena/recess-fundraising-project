@@ -36,7 +36,7 @@ module.exports = mongoose.model('User', new Schema({
     }
   },
   projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
-  _dateClosed: { type: Date, default: null, immutable: true }
+  _dateClosed: { type: String, default: null }
 }, {
   collection: 'users',
   minimize: false,

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import  { ThemeProvider } from '@material-ui/core/styles'
 import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css';
-import App from './components/App';
-import theme from './theme'
+import App from './App';
+import theme from './assets/css/theme'
 
 ReactDOM.render(
   <React.StrictMode>

@@ -21,7 +21,6 @@ router.delete('/:id', Project.deleteProject)
 router.post('/deactivate/:id', Project.deactivateProject)
 router.post('/verify/:id', Project.verifyProject)
 router.post('/current/:id', Project.setCurrent)
-router.post('/thanks', Project.setThankYou)
-route.get('/funders', Project.getFunders)
+// route.get('/funders', Project.getProjectFunders)
 
 module.exports = router

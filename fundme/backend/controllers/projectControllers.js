@@ -35,7 +35,8 @@ function makeData(data) {
       owner: owner,
       description: description,
       country: country,
-      [stats.target]: target
+      category: category,
+      ['stats.target']: target
     })
     project.save((error, project) => {
       if (error) 
@@ -92,12 +93,20 @@ function makeData(data) {
     })
    },
 
-   setCurrent: (req, res, next) => { // send this route to funder
-    const { funderId, amount } = req.body
+   setCurrent: (req, res, next) => {
+    const { funderId, amount, currency, time } = req.body
     const { id } = req.params
+
+    const funder = {
+      funderId: funderId,
+      amount: amount,
+      currency: currency,
+      time: time
+    }
+
     Project.findByIdAndUpdate(id, 
-      {[stats.current]: stats.current + amount, funders: funders.push({ funderId: funderId, amount: amount, time: new Date().toLocaleString()})},
-      { new: true },
+      {$push: {['stats.funders']: funder}, $inc: {['stats.current']: amount}},
+      { new: true }, 
       (error, project)=> {
         if (error) 
           res.json(makeError(error, `FAILED TO UPDATE CURRENT AMOUNT OF PROJECT WITH ID ${id}`))
@@ -105,26 +114,13 @@ function makeData(data) {
       })
    },
 
-   getFunders: (req, res, next) => {
-    const { id } = req.params
-    Project.findById(id, (error, project) => {
-      if (error) 
-        res.json(makeError(error, `FAILED TO FIND USER WITH ID ${id}`))
-      // find all funders whose ids are part of the id fields of the objects in funders in Project model
-      Funder.find({ _id: { }})
-    })
-   },
-
-   setThankYou: (req, res, next) =>  { //send route to user routes
-    const { id } = req.params
-    const { thanks } = req.body
-    // send emails to funders with nodemailer
-    Project.findByIdAndUpdate(id, { thanks: thanks })
-   },
-
-  //  addComment: (req, res, next) => {
-  //   const { comment, time, owner } = req.body
+  //  getProjectFunders: (req, res, next) => {
   //   const { id } = req.params
-  //   Project.findByIdAndUpdate(id, { comments: {$push: { comment:  }} })
+  //   Project.findById(id, (error, project) => {
+  //     if (error) 
+  //       res.json(makeError(error, `FAILED TO FIND USER WITH ID ${id}`))
+  //     // find all funders whose ids are part of the id fields of the objects in funders in Project model
+  //     const funders = project.stats.funders.reduce((current, next) => )
+  //   })
   //  }
  }

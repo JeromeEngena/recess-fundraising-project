@@ -72,7 +72,7 @@ module.exports = mongoose.model('Project', new Schema({
     funders: [{
       funderId: { type: Schema.Types.ObjectId, ref: 'Funder', required: true },
       amount: { type: Number, required: true },
-      curreny: { type: String, default: 'UGX' },
+      currency: { type: String, default: 'UGX' },
       time: { type: String, required: true }
     }],
     thanks: { type: String, default: null },
