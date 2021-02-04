@@ -1,3 +1,11 @@
+require('dotenv').config()
+const express = require('express')
+const router = express.Router()
+const bodyParser = require('body-parser')
+router.use(bodyParser.urlencoded({ extended: true }))
+router.use(bodyParser.json())
+const jwt = require('jsonwebtoken')
+
 /**
  * post: register user
  * get: login user 
@@ -54,16 +62,17 @@ module.exports = {
   registerUser: (req, res, next) => {
     const {first_name, last_name, email, telephone, password } = req.body
     User.exists({ $or: [{ email: email }, { 'contact.telephone': telephone }] }, (error, userExists) => {
-      if (error) {
-        res.json(makeError(error, `FAILED TO QUERY USER WITH EMAIL ${email} OR TELEPHONE ${telephone}.`))
-      }
-      
+      if (error)
+        res.json({ status: 500, message: 'Error on server' })
+
       if (userExists) {
-        res.json(makeError(`USER WITH EMAIL ${email} OR WITH TELEPHONE ${telephone} ALREADY EXISTS.`))
-      } else {
-        hashPassword(password, (error, hashedPassword) => {
-          if (error)
-            res.json(makeError(error, 'HASHING OF USER PASSWORD FAILED!'))
+        res.json({ status: 404, message: 'User already exists' })
+      
+    
+      hashPassword(password, (error, hashedPassword) => {
+        if (error)
+          res.json({ status: 500, message: 'Error on server' })
+
           const user = new User({
             first_name: first_name,
             last_name: last_name,
@@ -73,10 +82,11 @@ module.exports = {
           })
           user.save((error, user) => {
             if (error)
-              res.json(makeError(error, 'FAILED TO REGISTER USER!'))
-            res.json(user)
+              res.json({ status: 500, message: 'Error on server' })
+            else if (user)
+              res.json({ status: 201, message: 'User created successfully'})
           })
-        }) 
+        })
       }
     })
   },
@@ -89,13 +99,15 @@ module.exports = {
       if (!user)
         res.json({ status: 404, message: 'No user found' })
 
+      // serialize the user
+      const serializedUser = { _id: user._id}
       comparePasswords(password, user.password, (error, passwordsMatch) => {
         if (error)
           res.json(({ status: 500, message: 'Error on server', auth: false, token: null })) 
         if (!passwordsMatch) 
           res.json(makeData({ status: 401, message: 'Unauthorized', auth: false, token: null }))
           
-        res.json({ status: 200, auth: true, accessToken: jwtAuth.generateAccessToken(user._id), refreshToken: jwtAuth.generateRefreshToken(user._id) })
+        res.json({ status: 200, auth: true, accessToken: jwtAuth.generateAccessToken(serializedUser), refreshToken: jwtAuth.generateRefreshToken(serializedUser) })
       })
     })
   },
@@ -123,7 +135,7 @@ module.exports = {
     User.find({}, (error, users) => {
       if (error)
         res.json(makeError(error, 'FAILED TO GET ALL THE USERS!'))
-      res.json(makeData(users))
+      res.json(users)
     })
   },
 
@@ -132,7 +144,7 @@ module.exports = {
     User.findById(id, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO FIND USER WITH ID: ${id}`))
-      res.json(makeData(user))
+      res.json(user)
     })
   },
 
@@ -141,7 +153,7 @@ module.exports = {
     User.findByIdAndUpdate(id, { active: false, _dateClosed: new Date().toLocaleString() }, { new: true }, (error, user) => {
       if (error)
         res.json(makeError(error, `FAILED TO DEACTIVATE USER WITH ID ${id}`))
-      res.json(makeData(user))
+      res.json(user)
     })
   },
 
@@ -189,7 +201,7 @@ module.exports = {
         Project.find({ _id: { $in: user.projects } }, (error, projects) => {
           if (error) 
             res.json(makeError(error, `FAILED TO GET PROJECTS OF USER WITH ID ${id}`))
-          res.json(makeData(projects))
+          res.json(projects)
         })
     })
   },
@@ -205,8 +217,8 @@ module.exports = {
       if (error) 
         res.json(makeError(error, `FAILED TO SET THANK YOU MESSAGE TO PROJECT WITH ID ${id}`))
         // send email to all visible funders with nodemailer
-      res.json(makeData(projects))
-    })
+      res.json(projects)
+    }) 
    }
 
  }

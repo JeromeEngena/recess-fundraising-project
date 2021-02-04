@@ -57,29 +57,21 @@
 import React from 'react'
 import LoginForm from './LoginForm'
 import { makeStyles } from '@material-ui/core/styles'
-import RouterLink from '../../../components/RouteLink'
 import SecondaryFooter from '../SecondaryFooter'
 import SecondaryHeader from '../SecondaryHeader'
 
 const useStyles = makeStyles(theme => ({
-  nav: {
-
-  },
-  navLeft: {
-
-  },
-  logo: {
-
-  },
-  navRight: {
-
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
   }
 }))
 
 function LoginPage() {
   const classes = useStyles()
   return (
-    <main>
+    <main className={classes.root}>
       <SecondaryHeader path='/register' label='Sign up' />
 
       <LoginForm userKnowsPassword={true}/>

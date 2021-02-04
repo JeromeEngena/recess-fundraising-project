@@ -59,14 +59,14 @@ module.exports = mongoose.model('Project', new Schema({
       title: { type: String, required: true },
       dimensions: {
         width: { type: Number, required: true },
-        height: { type: Number, required: true }
+        height: { type: Number, required: true } 
       }
     }],
     category: { type: String, required: true, default: 'Personal', enum: categories },
     country: { type: String, required: true, default: 'Uganda' }
   },  
   stats: {
-    curreny: { type: String, default: 'UGX' },
+    currency: { type: String, default: 'UGX' },
     target: { type: Number, required: true },
     current: { type: Number, default: 0 },
     funders: [{

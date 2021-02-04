@@ -29,11 +29,16 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '180px',
+    borderRadius: '10px',
+    boxShadow: '5px 5px 15px 5px rgba(0,0,0,0.19)',
     bottom: theme.spacing(-14),
-    right: theme.spacing(3),
+    right: theme.spacing(5),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
+    paddingBottom: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      right: theme.spacing(25),
+    }
   },
   conceptHeader: {
     marginBottom: theme.spacing(0),

@@ -7,6 +7,8 @@ import ResetPasswordPage from './pages/protected/ResetPasswordPage/ResetPassword
 import NotFound from './pages/public/NotFound'
 import Authenticate from './pages/protected/Authenticate'
 import RegisterPage from './pages/public/RegisterPage/RegisterPage'
+import ProjectPage from './pages/public/ProjectPage/ProjectPage'
+import { userContext } from './context/Auth/'
 
 function App() {
   return (
@@ -14,17 +16,17 @@ function App() {
         <Switch>
           <Route exact path='/' component={HomePage} />
 
-          <Route exact path='/dashboard' component={Dashboard} />
-
-          <Route exact path='/login' component={LoginPage} />
-
-          <Route exact path='/reset-password' component={ResetPasswordPage} />
-
           <Route exact path='/register' component={RegisterPage} />
+
+          <Route exact path='/project/:id' component={ProjectPage} />
 
           <Route exact path='/auth'>
             <Authenticate />
           </Route>
+
+          <Route exact path='/login' component={LoginPage} />
+          <Route exact path='/dashboard' component={Dashboard} />
+          <Route exact path='/reset-password' component={ResetPasswordPage} />
 
           <Route path='/donate'>
             <h1>Hello  fund me route</h1>
@@ -35,6 +37,7 @@ function App() {
           <Route>
             <NotFound />
           </Route>
+
         </Switch>
     </Router>
   );

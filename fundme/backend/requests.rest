@@ -1,0 +1,38 @@
+POST http://localhost:4000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "michealjackson@gmail.com",
+  "password": "michealjackson1234"
+}
+
+###
+
+POST http://localhost:4000/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "first_name": "Chris",
+  "last_name": "Brown",
+  "email": "chrisbrown@gmail.com",
+  "telephone": "07547947362",
+  "password": "chrisbrown1234"
+}
+
+###
+
+GET http://localhost:4000/users HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE0NDZiZDQ2M2MzMzI3ZjgzMmI5ZmIiLCJpYXQiOjE2MTIzNDI1NTgsImV4cCI6MTYxMjQyODk1OH0.S9dEdFItqOuRaiLzNHES8DZtXNcwj8RJPw8-mTzBWFs
+
+
+###
+
+GET http://localhost:4000/users/600971967239e46938a60b1d HTTP/1.1
+Authorization: : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE0NDZiZDQ2M2MzMzI3ZjgzMmI5ZmIiLCJpYXQiOjE2MTIzNDI1MjQsImV4cCI6MTYxMjQyODkyNH0.wHuV9QEAoLYnvRZjTYRssRdHbT5iI1iW06IPRt0_QSA
+
+###
+GET http://127.0.0.1:4000/projects/60156bde6febe921c8ce3d3b
+
+###
+
+GET http://127.0.0.1:4000/projects/?id=601b0e8308277c523c4a974c

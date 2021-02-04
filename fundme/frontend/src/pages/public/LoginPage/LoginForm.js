@@ -2,8 +2,52 @@ import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import FormField from '../../../components/FormField'
+import { makeStyles } from '@material-ui/core/styles'
 import { validateEmail, validatePassword } from '../../../utils/validation'
-import RouterLink from '../../../components/RouteLink'
+import { Link } from 'react-router-dom'
+import { BiArrowBack } from 'react-icons/bi'
+
+const useStyles = makeStyles(theme => ({
+  formSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.primary.main
+  },
+  formHeader: {
+    fontWeight: '600'
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '150px',
+    justifyContent: 'space-around'
+  },
+  bannerInfo: {
+    fontSize: '0.85rem',
+    textAlign: 'center'
+  },
+  formActionLink: {
+    oolor: theme.palette.primary.main,
+    textDecoration: 'none',
+    fontWeight: 600,
+    '&:active': {
+      color: theme.palette.primary.main
+    },
+    '&:focus': {
+      color: theme.palette.primary.main
+    },
+    '&:visited': {
+      color: theme.palette.primary.main
+    }
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+}))
 
 const validationSchema = yup.object({
   email: validateEmail,
@@ -11,6 +55,7 @@ const validationSchema = yup.object({
 })
 
 function LoginForm({ userKnowsPassword }) {
+  const classes = useStyles()
   const [knowsPassword, setKnowsPassword] = useState(userKnowsPassword)
   let initialValues = {}
   
@@ -36,9 +81,9 @@ function LoginForm({ userKnowsPassword }) {
   }  
 
   return (
-    <section>
-      {knowsPassword ? <h2>Sign in</h2> : <h2>Forgot Password</h2>}
-      <form onSubmit={formik.handleSubmit}>
+    <section className={classes.formSection}>
+      {knowsPassword ? <h2 className={classes.formHeader}>Sign in</h2> : <h2 className={classes.formHeader}>Forgot Password</h2>}
+      <form onSubmit={formik.handleSubmit} className={classes.form}>
         <FormField
           type='text'
           name='email'
@@ -49,7 +94,7 @@ function LoginForm({ userKnowsPassword }) {
           helperText={formik.touched.email && formik.errors.email}
         />
 
-        {knowsPassword && (
+        {knowsPassword ? (
           <FormField
             type='password'
             name='password'
@@ -59,7 +104,10 @@ function LoginForm({ userKnowsPassword }) {
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
           />
-        )}
+        ): (
+          <p className={classes.bannerInfo}>Please provide your email address</p>
+        )
+        }
 
         <FormField
           type='submit'
@@ -68,7 +116,16 @@ function LoginForm({ userKnowsPassword }) {
         />
       </form>
 
-      <RouterLink to='login' onClick={toggleKnowsPassword} >{knowsPassword ? 'Forgot your password?': 'Go back'}</RouterLink>
+      <Link 
+        className={classes.formActionLink} 
+        to='/login' onClick={toggleKnowsPassword}>
+          {knowsPassword ? 
+            'Forgot your password?': 
+            (
+              <span className={classes.backBox}>
+                <BiArrowBack size={17} style={{marginRight: '5px'}} />Go back
+              </span>
+            )}</Link>
     </section>
   )
 }

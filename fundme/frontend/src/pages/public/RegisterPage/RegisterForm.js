@@ -10,6 +10,27 @@ import {
   validateName
 } from '../../../utils/validation'
 import TogglePasswordVisibility from '../../protected/ResetPasswordPage/TogglePasswordVisibility'
+import  { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+  formSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.primary.main
+  },
+  formHeader: {
+    fontWeight: '600'
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '200px',
+    justifyContent: 'space-around'
+  }
+}))
 
 const validationSchema = yup.object({
   first_name: validateName('First Name'),
@@ -35,6 +56,7 @@ const handleFormSubmit = (values) => {
 }
 
 function RegisterForm() {
+  const classes = useStyles()
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -43,9 +65,9 @@ function RegisterForm() {
   })
 
   return (
-    <section>
-      <h2>Register</h2>
-      <form onSubmit={formik.handleSubmit}>
+    <section className={classes.formSection}>
+      <h2 className={classes.formHeader}>Register</h2>
+      <form onSubmit={formik.handleSubmit} className={classes.form}>
         <FormField
           type='text'
           name='first_name'

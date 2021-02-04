@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
   logo: {
     letterSpacing: theme.spacing(0.7),
     fontSize: '1.9rem',
-
     height: 'fit-content',
     margin: theme.spacing(0),
   },
