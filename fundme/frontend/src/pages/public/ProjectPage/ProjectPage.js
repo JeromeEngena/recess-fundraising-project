@@ -17,62 +17,43 @@ function ProjectPage() {
   const classes = useStyles()
   const { id } = useParams()
   const [ project, setProject ] = useState(JSON.parse(localStorage.getItem('Project')))
-  // const [ owner, setOwner ] = useState(JSON.parse(localStorage.getItem('Owner')))
-
-  // useEffect(() => {
-  //  axios.get(`http://127.0.0.1:4000/projects/601b9a7171ea615314e93223`)
-  //   .then(response => {
-  //     const project = response.data
-  //     localStorage.setItem('Project', JSON.stringify(project))
-  //     // setProject(JSON.parse(localStorage.getItem('Project')) || 'Project missing')
-  //     console.log(JSON.stringify(project))
-  //     return axios.get(`http://127.0.0.1:4000/users/${project.owner}`)
-  //       .then(response => {
-  //         const owner = response.data
-  //         localStorage.setItem('Owner', JSON.stringify(owner))
-  //         // setOwner(localStorage.getItem('Owner') || 'Owner missing')
-  //         console.log(owner)
-  //       })
-  //       .catch(error => console.log(error))
-  //   })
-  //   .catch(error => console.log(error))
-  // }, [])
 
   useEffect(() => {
-    console.log('This is the id param ' + id)
-    const url = 'http://127.0.0.1:4000/projects/'
-    axios.get(url, { params: { id: id } })
+    axios(`http://127.0.0.1:4000/projects/${id}`)
       .then(response => {
-        console.log(response.data);
         const project = response.data
         localStorage.setItem('Project', JSON.stringify(project))
-        console.log('This is the project ' + project);
+        console.log(project);
       })
       .catch(error => console.log(error))
-  }, [])
+      // return () => {
+      //   localStorage.removeItem('Project')
+      // }
+  }, []) 
 
   useEffect(() => { 
-    document.title = id
+    document.title = `Project ${id}`
   })
 
   return (
     <Container maxWidth={'xl'} className={classes.root}>
+      {/* <h1>{project.projectName}</h1> */}
       <ProjectPageHeader />
-      {/* <h1>{project.description.category}</h1> */}
-        {/* <Container maxWidth={'lg'}>
-          <h1>{project.name}</h1>
+        <Container maxWidth={'lg'}>
+          <h1>{project.projectName}</h1>
           <Grid item xs={12}>
             <Grid item xs={12} md={6} className={classes.mainImage}>
-              <img src={project.description.cover_images[0].path} alt={project.description.cover_images[0].title} />
+              <img src='/https://images.gofundme.com/2SPVJP0Ym0o6QzDz86OfNcr3rM0=/720x405/https://d2g8igdw686xgo.cloudfront.net/42249576_1569326715122969_r.jpeg' alt={project.description.cover_images[0].title} />
+              
             </Grid>
             <Grid item xs={12} md={4} component='section'>
-              <div className={classes.projectInfo}>
+              <div className={classes.projectInfo}> 
                 <div className={classes.infoTop}>
                   <div className={classes.infoTopHeader}>
-                    <span>{project.stats.curreny}</span>
-                    {project.stats.current}
+                    <span>{project.stats.currency}</span>
+                      {project.stats.current}
                     <span className={classes.target}>
-                      raised of {`${project.stats.curreny} ${project.stats.target}`}
+                      raised of {project.stats.currency} {project.stats.target}
                     </span>
                   </div>
                   <div className={classes.progressBarOuter}>
@@ -112,7 +93,7 @@ function ProjectPage() {
                   </ul>
                   <div className={classes.fundersButtons}>
                     <button className={classes.fundersButton}>See all</button>
-                    <button className={classes.fundersButton}>See all</button>
+                    <button className={classes.fundersButton}>See top funders</button>
                   </div>
                 </div>
               </div>
@@ -122,8 +103,8 @@ function ProjectPage() {
             <div className={classes.mainDescription}>
               <div className={classes.mainDescriptionLeft}></div>
               <div className={classes.mainDescriptionRight}>
-                {/* <h3>{owner.name}</h3> */}
-                {/* {project.organization ? <h4>Organization Name</h4> : <></>}
+                <h3>{`${project.owner.ownerFirstName} ${project.owner.ownerLastName}`}</h3>
+                {project.organization ? <h4>Organization Name</h4> : <></>}
               </div>
             </div>
             <div className={classes.shareButtons}>
@@ -136,10 +117,10 @@ function ProjectPage() {
             </div>
             <div className={classes.descriptionFooter}>
               <span>Created 3 January, 2021</span>
-              <span>Children and Youth</span>
+              <span>{project.projectDescription.category}</span>
             </div>
           </Grid>
-      </Container>  */}
+      </Container> 
     </Container>
   )
 }

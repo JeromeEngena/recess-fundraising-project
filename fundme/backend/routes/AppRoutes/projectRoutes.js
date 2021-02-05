@@ -12,7 +12,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { Project } = require('../controllers')
+const { Project } = require('../../controllers')
 
 router.post('/', Project.createProject)
 router.get('/', Project.getAllProjects)

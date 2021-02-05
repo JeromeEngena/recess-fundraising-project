@@ -8,6 +8,7 @@ import NotFound from './pages/public/NotFound'
 import Authenticate from './pages/protected/Authenticate'
 import RegisterPage from './pages/public/RegisterPage/RegisterPage'
 import ProjectPage from './pages/public/ProjectPage/ProjectPage'
+import DonatePage from './pages/public/DonatePage/DonatePage'
 import { userContext } from './context/Auth/'
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
 
           <Route exact path='/project/:id' component={ProjectPage} />
 
+          <Route exact path='/donate' component={DonatePage} />
+
           <Route exact path='/auth'>
             <Authenticate />
           </Route>
@@ -27,10 +30,6 @@ function App() {
           <Route exact path='/login' component={LoginPage} />
           <Route exact path='/dashboard' component={Dashboard} />
           <Route exact path='/reset-password' component={ResetPasswordPage} />
-
-          <Route path='/donate'>
-            <h1>Hello  fund me route</h1>
-          </Route>
 
           {/* <Route path='/forgot-password' component={ForgotPasswordPage} /> */}
 

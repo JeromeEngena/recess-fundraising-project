@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(1),
     [theme.breakpoints.up('md')]: {
       right: theme.spacing(25),
+    },
+    [theme.breakpoints.up('lg')]: {
+      right: theme.spacing(35),
     }
   },
   conceptHeader: {

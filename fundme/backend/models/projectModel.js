@@ -48,13 +48,20 @@ const categories = [
 ]
 
 module.exports = mongoose.model('Project', new Schema({
-  name: { type: String, required: true, immutable: true },
-  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true, immutable: true },
-  active: { type: Boolean, default: true },
-  verified: { type: Boolean, default: false },
-  description: {
+  owner: {
+    ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true, immutable: true },
+    ownerFirstName: { type: String, required: true, immutable: true },
+    ownerLastName: { type: String, required: true, immutable: true },
+    ownerEmail: { type: String, required: true },
+    ownerTelephone: { type: String, required: true },
+    ownerVerification: { type: Boolean }
+  },
+  projectName: { type: String, required: true, immutable: true },
+  projectStatus: { type: String, default: 'Active', enum: ["Active", "Closed"] },
+  projectVerification: { type: Boolean, default: false },
+  projectDescription: {
     body: { type: String, required: true },
-    cover_images: [{
+    coverImages: [{
       path: { type: String, required: true },
       title: { type: String, required: true },
       dimensions: {
@@ -83,7 +90,7 @@ module.exports = mongoose.model('Project', new Schema({
     //   owner: { type: Schema.Types.ObjectId, required: true, ref: 'Funder' }
     // }]
   },
-  _dateClosed: { type: Date }
+  _dateClosed: { type: Date, default: null }
 }, {
   collection: 'projects',
   minimize: false,

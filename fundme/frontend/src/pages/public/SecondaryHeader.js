@@ -31,7 +31,7 @@ function SecondaryHeader(props) {
       <Container maxWidth={'md'} className={classes.nav}>
         <div>
           <RouterLink to='/'>
-            <h3 className={classes.logo}>goFundMe</h3>
+            <h3 className={classes.logo}>GIVAR</h3>
           </RouterLink>
         </div>
 

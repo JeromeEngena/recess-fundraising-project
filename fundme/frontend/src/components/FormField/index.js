@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
+import { Checkbox, FormControlLabel } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   submitBtn: {
@@ -21,13 +22,16 @@ const useStyles = makeStyles(theme => ({
   },
   inputField: {
     margin: theme.spacing(1),
-    color: theme.palette.secondary.dark
+    color: theme.palette.primary.light,
+  },
+  checkbox: {
+    fontSize: '0.8rem'
   }
 }))
 
 function FormField(props) {
   const classes = useStyles()
-  const { type, name, label, value, ...others } = props
+  const { type, name, label, value, checked, ...others } = props
 
   switch (type) {
     case 'text': return (
@@ -83,8 +87,19 @@ function FormField(props) {
       </button>
     )
 
-    case 'multiline': return (
-      <TextField
+    case 'checkbox': return (
+      <FormControlLabel
+        control={
+          <Checkbox
+            name={name}
+            checked={checked}
+            disableRipple
+            color='primary'
+            
+          />
+        }
+        label={label}
+        className={classes.checkbox}
       />
     )
 

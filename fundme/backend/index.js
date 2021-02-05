@@ -7,7 +7,7 @@ const colors = require('colors')
 const cors = require('cors')
 
 // module configurations 
-const { userRoutes, projectRoutes, funderRoutes } = require('./routes')
+const { userRoutes, projectRoutes, funderRoutes } = require('./routes/AppRoutes')
 
 
 // base constants

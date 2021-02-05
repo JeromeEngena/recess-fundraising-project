@@ -29,24 +29,23 @@ function makeData(data) {
 
  module.exports = {
    createProject: (req, res, next) => {
-    const { name, owner, description, stats } = req.body
+    const { owner, projectName, projectDescription ,stats } = req.body
     const project = new Project({
-      name: name,
       owner: owner,
-      active: true,
-      description: description,
+      projectName: projectName,
+      projectDescription: projectDescription,
       stats: stats
     })
     project.save((error, project) => {
       if (error) 
         res.json(makeError(error, 'FAILED TO CREATE PROJECT.'))
-      res.json(makeData(project))
+      res.json(project)
     })
    },
 
    getSingleProject: (req, res, next) => {
      const { id } = req.params
-     Project.findById({ _id: id }, (error, project) => {
+     Project.findById(id, (error, project) => {
       if (error) 
         res.json(makeError(error, `FAILED TO GET PROJECT WITH ID ${id}`))
       res.json(project)

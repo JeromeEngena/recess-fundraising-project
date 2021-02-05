@@ -11,7 +11,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { Funder } = require('../controllers')
+const { Funder } = require('../../controllers')
 
 router.post('/fund', Funder.createFunder)
 router.post('/projects/add', Funder.appendToFunderProjects)
