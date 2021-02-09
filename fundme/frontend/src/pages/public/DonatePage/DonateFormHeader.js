@@ -8,7 +8,7 @@ import ExternalRouterLink from '../../../components/ExternalRouterLink'
 
 const useStyles = makeStyles(theme => ({
   donateFormHeader: {
-    backgroundColor: 'red',
+    backgroundColor: theme.palette.secondary.light,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     paddingBottom: theme.spacing(2),
@@ -185,11 +185,11 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-function DonateFormHeader() {
+function DonateFormHeader(props) {
   const classes = useStyles()
   return (
     <div className={classes.donateFormHeader}>
-      <h2 className={classes.projectTitle}>Educate an orphan</h2>
+      <h2 className={classes.projectTitle}>{props.projectName}</h2>
       <div className={classes.projectProfileImageBox}>
         <img 
           src='https://images.gofundme.com/2SPVJP0Ym0o6QzDz86OfNcr3rM0=/720x405/https://d2g8igdw686xgo.cloudfront.net/42249576_1569326715122969_r.jpeg' 
@@ -198,20 +198,20 @@ function DonateFormHeader() {
       </div>
       <div className={classes.projectStats}>
         <div className={classes.fundingStats}>
-          <span className={classes.current}>UGX. 200,000</span>
-          <span className={classes.target}> of <span className={classes.targetInner}>UGX. 1,000,000</span></span>
+          <span className={classes.current}>{`${props.currency}. ${props.currentDonations}`}</span>
+          <span className={classes.target}> of <span className={classes.targetInner}></span>{`${props.currency}. ${props.targetDonations}`}</span>
         </div>
         <div className={classes.progressBarOuter}>
           <div className={classes.progressBarInner}></div>
         </div>
         <p className={classes.fundersStats}>
           <CgTimelapse className={classes.clockIcon} /> 
-          <span className={classes.funders}>Raised by 82 people in 16 months</span>
+          <span className={classes.funders}>{`Raised by ${props.numberOfFunders} people in 16 months`}</span>
         </p>
       </div>
 
       <div className={classes.projectOwnerDetails}>
-        <h3 className={classes.ownerName}>About Bubuka Sharif</h3>
+        <h3 className={classes.ownerName}>{`About ${props.ownerName}`}</h3>
         <div className={classes.profile}>
           <div className={classes.ownerProfileImageBox}>
             <img 

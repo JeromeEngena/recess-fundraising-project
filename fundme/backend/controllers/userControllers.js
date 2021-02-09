@@ -59,42 +59,72 @@ function makeData(data) {
 }
 
 module.exports = {
-  registerUser: (req, res, next) => {
-    const {first_name, last_name, email, telephone, password } = req.body
-    User.exists({ $or: [{ email: email }, { 'contact.telephone': telephone }] }, (error, userExists) => {
-      if (error)
-        res.json({ status: 500, message: 'Error on server' })
+  // registerUser: (req, res, next) => {
+  //   const {first_name, last_name, email, telephone, password } = req.body
+  //   User.exists({ $or: [{ email: email }, { 'contact.telephone': telephone }] }, (error, userExists) => {
+  //     if (error) {
+  //       res.json({ status: 500, message: 'Error on server' })
+  //       return
+  //     }
 
-      if (userExists) {
-        res.json({ status: 404, message: 'User already exists' })
-      
+  //     if (userExists) {
+  //       res.json({ status: 404, message: 'User already exists' })
+  //       return
+  //     } else { 
     
-      hashPassword(password, (error, hashedPassword) => {
-        if (error)
-          res.json({ status: 500, message: 'Error on server' })
+  //     hashPassword(password, (error, hashedPassword) => {
+  //       if (error) {
+  //         res.json({ status: 500, message: 'Error on server' })
+  //         return
+  //       }
 
-          const user = new User({
-            first_name: first_name,
-            last_name: last_name,
-            email: email,
-            contact: {telephone: telephone },
-            password: hashedPassword
-          })
-          user.save((error, user) => {
-            if (error)
-              res.json({ status: 500, message: 'Error on server' })
-            else if (user)
-              res.json({ status: 201, message: 'User created successfully'})
-          })
-        })
+  //         const user = new User({
+  //           first_name: first_name,
+  //           last_name: last_name,
+  //           email: email,
+  //           contact: {telephone: telephone },
+  //           password: hashedPassword
+  //         })
+  //         user.save((error, user) => {
+  //           if (error)
+  //             res.json({ status: 500, message: 'Error on server' })
+  //           else if (user)
+  //             res.json({ user, status: 201, message: 'User created successfully'})
+  //         })
+  //       })
+  //     } 
+  //   })
+  // },
+  registerUser: (req, res, next) => {
+    hashPassword(req.body.password, (error, hashedPassword) => {
+      if (error) {
+        res.json({ status: 500, message: 'Error on server' })
+        return
       }
+
+      const user = new User({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        contact: {telephone: req.body.telephone },
+        password: hashedPassword
+      })
+      user.save((error, user) => {
+        if (error) {
+          res.json({ status: 500, message: 'Error on server' })
+          return
+        }
+        else if (user) {
+          res.json({ user: user, status: 201, message: 'User created successfully'})
+        } 
+      })
     })
   },
 
   loginUser: (req, res, next) => {
     const { email, password } = req.body
     User.findOne({ email: email }, (error, user) => {
-      if (error)
+      if (error) 
         res.json({ status: 500, message: 'Error on the server' })
       if (!user)
         res.json({ status: 404, message: 'No user found' })
@@ -221,4 +251,4 @@ module.exports = {
     }) 
    }
 
- }
+ } 

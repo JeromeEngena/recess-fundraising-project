@@ -1,7 +1,8 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
-import { Checkbox, FormControlLabel } from '@material-ui/core'
+import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 
 const useStyles = makeStyles(theme => ({
   submitBtn: {
@@ -22,16 +23,17 @@ const useStyles = makeStyles(theme => ({
   },
   inputField: {
     margin: theme.spacing(1),
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.light
   },
-  checkbox: {
-    fontSize: '0.8rem'
+  checkBoxLabel: {
+    fontSize: '0.8rem',
+    lineHeight: '0.5rem'
   }
 }))
 
 function FormField(props) {
   const classes = useStyles()
-  const { type, name, label, value, checked, ...others } = props
+  const { type, name, label, value, checked, options, ...others } = props
 
   switch (type) {
     case 'text': return (
@@ -88,19 +90,52 @@ function FormField(props) {
     )
 
     case 'checkbox': return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            name={name}
-            checked={checked}
-            disableRipple
-            color='primary'
-            
-          />
-        }
-        label={label}
-        className={classes.checkbox}
+      <Checkbox
+        name={name}
+        checked={checked}
+        color='secondary'
+        size="small"
+        disableRipple
+        disableFocusRipple
+        disableTouchRipple
+        inputProps={{ 'aria-label': 'checkbox with small size' }}
       />
+    )
+
+    case 'fileinput': return (
+      <input 
+        type='file' 
+        name={name}
+        {...others}  
+      />
+    )
+
+    case 'multiline': return (
+      <TextField
+          name={name}
+          label={label}
+          multiline
+          rows={5}
+          rowsMax={500}
+          variant="outlined"
+          {...others}
+        />
+    )
+
+    case 'autocomplete': return (
+      <Autocomplete
+      size='small'
+      options={options}
+      getOptionLabel={(option) => option}
+      renderInput={(params) => <TextField 
+                    {...params} 
+                    label={label} 
+                    name={name} 
+                    {...others}
+                    fullWidth 
+                    variant="outlined" 
+                  />}
+    />
     )
 
     default: return(

@@ -9,10 +9,6 @@ const validatePassword = yup
   .string('Enter password')
   .min(8, '8 or more characters required')
   .required('Password is required')
-  // .matches(
-  //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-  //   "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-  // )
 
 const validatePasswordEquality = yup
   .string()
@@ -29,11 +25,19 @@ const validateName = (label) => {
     .required(`${label} is required`)
 }
 
+const validateProjectName = yup
+    .string().required('Project Name is required')
+
+const validateProjectCategory = yup
+  .string().required('Project category is required')
+
 
 export { 
   validateEmail, 
   validatePassword, 
   validatePasswordEquality, 
   validatePhoneNumber,
-  validateName
+  validateName,
+  validateProjectName,
+  validateProjectCategory
 }

@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import axios from 'axios'
+import store from 'store'
 import FormField from '../../../components/FormField'
 import { makeStyles } from '@material-ui/core/styles'
 import { validateEmail, validatePassword } from '../../../utils/validation'
@@ -54,19 +56,30 @@ const validationSchema = yup.object({
   password: validatePassword
 })
 
-function LoginForm({ userKnowsPassword }) {
+function LoginForm({ userKnowsPassword, setUser }) {
   const classes = useStyles()
   const [knowsPassword, setKnowsPassword] = useState(userKnowsPassword)
   let initialValues = {}
   
   knowsPassword ? initialValues = {email: '', password: '' } : initialValues = { email: '' }
 
-  const handleFormSubmit = ({ email, password }) => {
-    if (password) {
-      console.log(`Email: ${email} and Password: ${password}`);
+  const handleFormSubmit = async (values, { resetForm }) => {
+    if (values.password) {
+      let response = () => {
+        return new Promise(function(resolve, reject) {
+          axios.post('http://127.0.0.1:4000/users/login', { email: values.email, password: values.password })
+          .then(response => resolve(response))
+        })
+      }
+      let result = await response()
+      if (result.data.status === 200) {
+        resetForm()
+        setUser(result.data)
+        store.set('accessToken', result.data.accessToken)
+        store.set('refreshToken', result.data.refreshToken)
+      }
     } else {
-      console.log(`Email ${email}`);
-      
+      console.log(`Email ${values.email}`);
     }
   }
   

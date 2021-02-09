@@ -29,7 +29,7 @@ module.exports = mongoose.model('User', new Schema({
     telephone: { type: String, required: true }
   },
   location: {
-    country: { type: String, required: true, default: 'Uganda' },
+    country: { type: String, default: 'Uganda' },
     precise: {
       type: { type: String, enum: ['Point'], default: 'Point' },
       coordinates: { type: [Number] }

@@ -24,7 +24,7 @@ exports.authenticateToken = (req, res, next) => {
 }
 
 exports.generateAccessToken = (serializedUser) => {
-  const accessToken = jwt.sign(serializedUser, process.env.JWT_SECRET_ACCESS_KEY, { expiresIn: '86400s' })
+  const accessToken = jwt.sign(serializedUser, process.env.JWT_SECRET_ACCESS_KEY, { expiresIn: '2h' })
   accessTokens.push(accessToken)
   return accessToken
 }

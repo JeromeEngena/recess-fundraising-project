@@ -1,6 +1,7 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import axios from 'axios'
 import FormField from '../../../components/FormField'
 import { 
   validatePassword, 
@@ -50,9 +51,32 @@ const initialValues = {
   password2: ''
 }
 
-const handleFormSubmit = (values) => {
-  const { first_name, last_name, telephone, password1 } = values
-  console.log(last_name);
+const registerUser = async (user) => {
+  const response = await axios.post('http://127.0.0.1:4000/users/', user)
+  console.log(response);
+}
+
+const handleFormSubmit = async (values, { resetForm }) => {
+  const user = {
+    first_name: values.first_name,
+    last_name: values.last_name,
+    email: values.email,
+    telephone: values.telephone,
+    password: values.password1
+  }
+  let response = () => {
+    return new Promise(function(resolve, reject) {
+      axios.post('http://127.0.0.1:4000/users', user)
+      .then(response => {
+        resolve(response)
+      })
+    })
+  }
+  let result = await response()
+  console.log(result);
+  if (result.data.status === 201) {
+    resetForm()
+  }
 }
 
 function RegisterForm() {

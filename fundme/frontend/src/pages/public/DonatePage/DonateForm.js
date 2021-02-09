@@ -98,7 +98,7 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '220px',
     height: '100%',
     padding: theme.spacing(0.5),
-    paddingLeft: theme.spacing(6),
+    paddingLeft: theme.spacing(6.5),
     fontSize: '2.5rem',
     fontWeight: 300,
     borderRadius: '10px',
@@ -119,7 +119,10 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.dark
   },
   totalDonation: {
-    marginTop: theme.spacing(1.5)
+    marginTop: theme.spacing(1.5),
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    maxWidth: '250px'
   },
   totalCurrencyBox: {
     fontWeight: 900,
@@ -154,10 +157,42 @@ const useStyles = makeStyles(theme => ({
     }
   },
   profileVisibilityBox: {
-    
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    fontSize: '0.9rem'
+    display: 'flex',
+    alignItems: 'center'
+  },
+  profileVisibilityLabel: {
+    lineHeight: '0.8rem', 
+    fontSize: '0.8rem'
+  },
+  submitButtonWrapper: {
+    width: '100%',
+    height: 'fit-content',
+    display: 'flex',
+    justifyContent: 'center',
+    flex: 1,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  formFooter: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  footerDisclaimer: {
+    width: '70%',
+    textAlign: 'center',
+    fontSize: '0.7rem'
+  },
+  backToProjectLink: {
+    fontSize: '0.8rem',
+    marginTop: theme.spacing(0.5),
+    textDecoration: 'none',
+    color: theme.palette.primary.main,
+    '&:hover': {
+      fontWeight: 900,
+      color: theme.palette.primary.dark
+    }
   }
 }))
 
@@ -184,7 +219,7 @@ const handleFormSubmit = (values) => {
   console.log(values)
 }
 
-function DonateForm() {
+function DonateForm(props) {
   const classes = useStyles()
   const [ formState, setFormState ] = useState('submitting')
 
@@ -293,7 +328,8 @@ function DonateForm() {
             label='Make my donation anonymous to organizer and others'
             fullWidth
             style={{fontSize: '0.5rem'}}
-        />
+          />
+          <span className={classes.profileVisibilityLabel}>Leave my donation visible to organizer and others</span>
         </span>
 
         <FormField
@@ -307,14 +343,16 @@ function DonateForm() {
         />
       </div>
 
-      <FormSubmitButton formState={formState} />
+      <span className={classes.submitButtonWrapper}>
+        <FormSubmitButton formState={formState} />
+      </span>
 
       <footer className={classes.formFooter}>
         <small className={classes.footerDisclaimer}>
           By continuing, you agree to the Givar terms and acknowledge receipt
           of our privacy policy.
         </small>
-        <Link to='/' className={classes.backToProjectLink}>Go back</Link>
+        <Link to={`/project/ffd`} className={classes.backToProjectLink}>To Project Profile</Link>
       </footer>
     </form>
   )

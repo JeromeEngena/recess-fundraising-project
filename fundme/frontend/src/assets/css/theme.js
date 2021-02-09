@@ -21,6 +21,9 @@ const theme = createMuiTheme({
     },
     success: {
       main: 'rgb(23, 169, 116)'
+    },
+    tertiary: {
+      main: 'pink'
     }
   },
   typography: {
