@@ -19,9 +19,11 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     paddingBottom: theme.spacing(1),
+    marginTop: theme.spacing(13),
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-      justifyContent: 'space-around'
+      justifyContent: 'space-around',
+      marginTop: theme.spacing(1),
     }
   },
   contactBox: {

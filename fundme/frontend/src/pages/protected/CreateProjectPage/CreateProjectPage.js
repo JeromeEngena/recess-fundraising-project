@@ -7,7 +7,7 @@ import FormField from '../../../components/FormField'
 import ProjectHeader from '../../public/ProjectPage/ProjectPageHeader'
 import ProjectFooter from '../../public/SecondaryFooter'
 import { Container, Grid, Input } from '@material-ui/core'
-import { validateProjectName } from '../../../utils/validation'
+import validate from '../../../utils/validation'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -73,7 +73,7 @@ const initialValues = {
 }
 
 const validationSchema = yup.object({
-  projectName: validateProjectName
+  projectName: validate.validateProjectName
 })
 
 const handleSubmit = values => {

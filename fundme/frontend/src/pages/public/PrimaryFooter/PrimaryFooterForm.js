@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import FormField from '../../../components/FormField'
-import { validateEmail, validateName } from '../../../utils/validation'
+import validate from '../../../utils/validation'
 
 const useStyles = makeStyles(theme => ({
   newsletterForm: {
@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white',
     color: theme.palette.primary.main,
     width: 'fit-content',
+    maxWidth: '200px',
     display: 'flex',
     flexDirection: 'column',
     borderRadius: '10px',
@@ -29,8 +30,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const validationSchema = yup.object({
-  name: validateName('Name'),
-  email: validateEmail
+  name: validate.validateName('Name'),
+  email: validate.validateEmail
 })
 
 const initialValues = {

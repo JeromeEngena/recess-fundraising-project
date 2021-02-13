@@ -25,12 +25,13 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase',
     border: 'none',
     borderRadius: '5px',
-    fontSize: '1.4rem',
+    fontSize: '0.8rem',
     letterSpacing: '0.3rem',
     backgroundColor: theme.palette.secondary.light,
     color: 'white',
     cursor: 'pointer',
     fontWeight: 900,
+    maxWidth: '80%',
     display: 'flex',
     alignItems: 'center',
     '&:focus': {
@@ -69,28 +70,28 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function FormSubmitButton({ formState, ...rest }) {
+function FormSubmitButton({ formState, handleFormSubmit, ...rest }) {
   const classes = useStyles()
 
   switch (formState) {
     case 'submitting': return (
-      <button type='submit' {...rest} className={classes.submittingButton}>
+      <button type='submit' {...rest} onClick={() => handleFormSubmit} className={classes.submittingButton}>
         Processing <ImSpinner className={classes.buttonSpinner} />
       </button>
     )
 
     case 'submitted': return (
-      <button type='submit' {...rest} className={classes.submitedButton}>
+      <button type='submit' {...rest} onClick={() => handleFormSubmit} className={classes.submitedButton}>
         Done <MdDone/>
       </button>
     )
     
     default: return (
-      <button type='submit' {...rest} className={classes.submitButton}>
+      <button type='submit' {...rest} onClick={() => handleFormSubmit} className={classes.submitButton}>
         Donate
       </button>
     )
   }
 }
 
-export default FormSubmitButton
+export default React.memo(FormSubmitButton)

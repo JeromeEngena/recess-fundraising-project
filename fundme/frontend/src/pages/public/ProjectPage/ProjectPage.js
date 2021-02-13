@@ -1,74 +1,197 @@
 import { Avatar, Container, Grid } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import ProjectPageHeader from './ProjectPageHeader'
 import { makeStyles } from '@material-ui/core/styles'
 import  { FiShare2 } from 'react-icons/fi'
 import { BiDonateHeart } from 'react-icons/bi'
 import axios from 'axios'
+import store from 'store'
+import DonationsProgressBar from '../../../components/DonationsProgressBar'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(0)
+    padding: theme.spacing(0),
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  projectWrapper: {
+    backgroundColor: theme.palette.secondary.light,
+    padding: theme.spacing(2),
+    color: theme.palette.primary.main,
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+      
+    }
+  },
+  projectTitle: {
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(1)
+  },
+  mainImageBox: {
+    height: '300px',
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '57%',
+      maxHeight: '300px'
+    }
+  },
+  mainImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: '5px'
+  },
+  headerWrapper: {
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+      justifyContent: 'space-between'
+      
+    }
+  },
+  projectInfoBox: {
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '40%',
+      position: 'relative',
+      display: 'flex'
+    }
+  },
+  projectInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'pink',
+    padding: theme.spacing(1),
+    borderRadius: '5px',
+    [theme.breakpoints.up('sm')]: {
+      position: 'absolute',
+      width: '96%'
+    }
+  },
+  fundraiserCurrentStats: {
+    fontSize: '0.9rem',
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5)
+  },
+  currentBox: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    [theme.breakpoints.up('md')]: {
+      fontWeight: 900
+    }
+  },
+  current: {
+    fontSize: '1.1rem',
+    fontWeight: 900
+  },
+  targetBox: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  },
+  shareButtons: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '80%',
+    alignSelf: 'center',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+  },
+  donateLink: {
+    textDecoration: 'none',
+    marginTop: theme.spacing(1),
+  },
+  shareButton: {
+    padding: '12px 50px',
+    textTransform: 'capitalize',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    width: '100%',
+    backgroundColor: theme.palette.secondary.light,
+    color: 'white',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    '&:focus': {
+      border: 'none',
+      outline: 'none'
+    }
+  },
+  shareButtonIcon: {
+    position: 'absolute',
+    left: theme.spacing(1)
+  },
+  projectDescription: {
+    backgroundColor: 'pink',
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(2),
+    borderRadius: '5px',
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '57%',
+      position: 'relative',
+      // top: theme.spacing(-21)
+    }
   }
 }))
 
-function ProjectPage() {
+function ProjectPage(props) {
   const classes = useStyles()
   const { id } = useParams()
-  const [ project, setProject ] = useState(JSON.parse(localStorage.getItem('Project')))
+  const [ project, setProject ] = useState( props.location.state || null)
 
   useEffect(() => {
     axios(`http://127.0.0.1:4000/projects/${id}`)
       .then(response => {
         const project = response.data
-        localStorage.setItem('Project', JSON.stringify(project))
-        console.log(project);
+        setProject(project)
+        console.log('running useeffect - Project Page')
       })
       .catch(error => console.log(error))
-      // return () => {
-      //   localStorage.removeItem('Project')
-      // }
-  }, []) 
+  },[id])
 
   useEffect(() => { 
     document.title = `Project ${id}`
   })
 
-  return (
+  if (project){ 
+    return (
     <Container maxWidth={'xl'} className={classes.root}>
-      {/* <h1>{project.projectName}</h1> */}
       <ProjectPageHeader />
-        <Container maxWidth={'lg'}>
-          <h1>{project.projectName}</h1>
-          <Grid item xs={12}>
-            <Grid item xs={12} md={6} className={classes.mainImage}>
-              <img src='/https://images.gofundme.com/2SPVJP0Ym0o6QzDz86OfNcr3rM0=/720x405/https://d2g8igdw686xgo.cloudfront.net/42249576_1569326715122969_r.jpeg' alt={project.description.cover_images[0].title} />
-              
+        <Container maxWidth={'md'} className={classes.projectWrapper}>
+          
+          <Grid xs={12} className={classes.headerWrapper}>
+            <Grid item xs={12} md={12} className={classes.mainImageBox}>
+              <img className={classes.mainImage} src={project.projectDescription.coverImages[0].path} alt={project.projectDescription.coverImages[0].title} />
             </Grid>
-            <Grid item xs={12} md={4} component='section'>
+            <Grid item xs={12} component='section' className={classes.projectInfoBox}>
               <div className={classes.projectInfo}> 
                 <div className={classes.infoTop}>
-                  <div className={classes.infoTopHeader}>
-                    <span>{project.stats.currency}</span>
-                      {project.stats.current}
-                    <span className={classes.target}>
-                      raised of {project.stats.currency} {project.stats.target}
-                    </span>
-                  </div>
-                  <div className={classes.progressBarOuter}>
-                    <div className={classes.progressBarInner}></div>
-                  </div>
+                  <h1 className={classes.projectTitle}>{project.projectName}</h1>
+                  <p className={classes.fundraiserCurrentStats}>
+                    <span className={classes.currentBox}><span className={classes.current}>{`${project.stats.currency}. ${project.stats.current}`}</span> raised</span>
+                    <span className={classes.targetBox}> of {`${project.stats.currency}. ${project.stats.target}`}</span>
+                  </p>
+                  <DonationsProgressBar />
                 </div>
                 <div className={classes.shareButtons}>
-                  <button className={classes.bigButton}>
-                    <FiShare2 />
+                  <button className={classes.shareButton}>
+                    <FiShare2 className={classes.shareButtonIcon} size={25} />
                     Share
                   </button>
-                  <button className={classes.bigButton}>
-                    <BiDonateHeart />
-                    Donate
-                  </button>
+                  <Link to={{
+                    pathname: `/project/donate/${id}`,
+                    state: project
+                  }} className={classes.donateLink}>
+                    <button className={classes.shareButton}>
+                      <BiDonateHeart className={classes.shareButtonIcon} size={25} />
+                      Donate
+                    </button>
+                  </Link>
                 </div>
                 <div className={classes.funders}>
                   <ul className={classes.fundersList}>
@@ -101,10 +224,10 @@ function ProjectPage() {
           </Grid>
           <Grid item className={classes.projectDescription} xs={12} md={6}>
             <div className={classes.mainDescription}>
-              <div className={classes.mainDescriptionLeft}></div>
+              <div className={classes.mainDescriptionLeft}>{project.projectDescription.body}</div>
               <div className={classes.mainDescriptionRight}>
                 <h3>{`${project.owner.ownerFirstName} ${project.owner.ownerLastName}`}</h3>
-                {project.organization ? <h4>Organization Name</h4> : <></>}
+                {/* {project.organization ? <h4>Organization Name</h4> : <></>} */}
               </div>
             </div>
             <div className={classes.shareButtons}>
@@ -117,12 +240,14 @@ function ProjectPage() {
             </div>
             <div className={classes.descriptionFooter}>
               <span>Created 3 January, 2021</span>
-              <span>{project.projectDescription.category}</span>
+              {/* <span>{project.projectDescription.category}</span> */}
             </div>
           </Grid>
       </Container> 
     </Container>
-  )
-}
+  )} else {
+    return (<h1>LOADING...</h1>)
+  }
+} 
 
 export default ProjectPage

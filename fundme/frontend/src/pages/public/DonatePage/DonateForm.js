@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import FormField from '../../../components/FormField'
 import { makeStyles } from '@material-ui/core/styles'
 import FormSubmitButton from './FormSubmitButton'
-import { validateName, validateEmail, validatePhoneNumber } from '../../../utils/validation'
+import validate from '../../../utils/validation'
 import { Link } from 'react-router-dom'
+import format from '../../../utils/format/currency'
+import { usePosition } from '../../../hooks/usePosition'
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -201,37 +204,113 @@ const initialValues = {
   lastName: '',
   email: '',
   telephone: '',
-  donation: '',
-  tip: '',
+  donation: 0,
+  tip: 0,
+  total: 0,
   country: 'Uganda',
   town: '',
   profileVisibility: true
 }
 
 const validationSchema = yup.object({
-  // firstName: validateName,
-  // lastName: validateName,
-  // email: validateEmail,
-  // telephone: validatePhoneNumber
+  firstName: validate.validateName('First Name'),
+  lastName: validate.validateName('Last Name'),
+  email: validate.validateFunderEmail,
+  telephone: validate.validatePhoneNumber,
+  country: validate.validateCountry,
+  town: validate.validateTown
 })
-
-const handleFormSubmit = (values) => {
-  console.log(values)
-}
 
 function DonateForm(props) {
   const classes = useStyles()
-  const [ formState, setFormState ] = useState('submitting')
+  const [ formState, setFormState ] = useState(null)
+  const {latitude, longitude, positionError } = usePosition()
+  console.log(latitude);
+  console.log(longitude);
+
+  const getTotalDonation = () => {
+    return format.formatNumberToString(format.formatStringToNumber(formik.values.donation) + format.formatStringToNumber(formik.values.tip))
+  }
+
+  const handleFormSubmit = (values, {resetForm}) => {
+    const { donation, tip, firstName, lastName, town } = values
+
+    const capitaliseFirstCharacter = (string) => {
+      let firstChar = [...String(string)][0].toUpperCase()
+      return [firstChar, ...string.slice(1)].join('')
+    }
+
+    const requestDonorToPay = async body => {
+      const { telephone, total, projectId } = body
+      return await axios({
+        method: 'post',
+        url: 'http://127.0.0.1:4000/funders/request-to-pay',
+        data: { telephone, total, projectId }
+      })
+    }
+
+    const saveDonorToDB = async body => {
+      return await axios({
+        
+      })
+    }
+
+    const submitForm = async body => {
+      setFormState('submitting')
+      const { data } = await requestDonorToPay(body)
+      if (data.success) {
+        const { data } = await saveDonorToDB(body)
+      }
+
+      // .then(response => {
+      //   console.log(response.data);
+      // })
+      // .catch(error => {
+      //   console.log(error);
+      //   setFormState(null) // occurs on request timeout
+      // })
+    }
+
+    const cleanValues = {
+      ...values,
+      firstName: capitaliseFirstCharacter(firstName),
+      lastName: capitaliseFirstCharacter(lastName),
+      town: capitaliseFirstCharacter(town),
+      donation: format.formatStringToNumber(donation),
+      projectId: props.projectId,
+      tip: format.formatStringToNumber(tip),
+      total: format.formatStringToNumber(getTotalDonation())
+    }
+
+    if (latitude && longitude) {
+      cleanValues.position = { 
+        success: true,
+        longitude: longitude,
+        latitude: latitude
+       }
+       submitForm(cleanValues)
+      console.log(cleanValues)
+      formik.resetForm()
+      return
+    }
+
+    cleanValues.position = {
+      success: false,
+      message: positionError
+    }
+    submitForm(cleanValues)
+    console.log({cleanValues,positionError})
+    formik.resetForm()
+  }
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: handleFormSubmit
-  
   })
 
   return (
-    <form onSubmit={formik.handleSubmit} className={classes.form}>
+    <form onSubmit={formik.handleSubmit} className={classes.form} onReset={formik.handleReset}>
       <div className={classes.donationField}>
         <label htmlFor='donation' className={classes.donationLabel}>Enter your donation</label>
         <div className={classes.donationFieldInput}>
@@ -239,7 +318,7 @@ function DonateForm(props) {
             type='text'
             name='donation'
             id='donation' 
-            value={formik.values.donation}
+            value={format.formatNumberToString(format.formatStringToNumber(formik.values.donation))}
             onChange={formik.handleChange}
             className={classes.donationInput}
           />
@@ -262,15 +341,15 @@ function DonateForm(props) {
                 type='text'
                 name='tip'
                 id='tip' 
-                value={formik.values.tip}
-                onChange={formik.handleChange}
                 className={classes.tipInput}
+                value={format.formatNumberToString(format.formatStringToNumber(formik.values.tip))}
+                onChange={formik.handleChange}
               />
               <span className={classes.tipCurrencyBox}>UGX.</span>
             </div>
             <span className={classes.totalDonation}>
               Total charge:<span className={classes.totalCurrencyBox}>UGX.</span> 
-              {`${formik.values.donation + formik.values.tip}`}
+              {getTotalDonation()}
             </span>
           </div>
         </div>
@@ -284,6 +363,8 @@ function DonateForm(props) {
             label='First Name'
             value={formik.values.firstName}
             onChange={formik.handleChange}
+            error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+            helperText={formik.touched.firstName && formik.errors.firstName}
           />
 
           <FormField
@@ -292,6 +373,8 @@ function DonateForm(props) {
             label='Last Name'
             value={formik.values.lastName}
             onChange={formik.handleChange}
+            error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+            helperText={formik.touched.lastName && formik.errors.lastName}
           />
         </div>
 
@@ -301,6 +384,8 @@ function DonateForm(props) {
           label='Email'
           value={formik.values.email}
           onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
         />
 
         <div className={classes.locationWrapper}>
@@ -310,7 +395,9 @@ function DonateForm(props) {
             label='Country'
             value={formik.values.country}
             onChange={formik.handleChange}
-            />
+            error={formik.touched.country && Boolean(formik.errors.country)}
+            helperText={formik.touched.country && formik.errors.country}
+          />
 
           <FormField
             type='text'
@@ -318,6 +405,8 @@ function DonateForm(props) {
             label='Town'
             value={formik.values.town}
             onChange={formik.handleChange}
+            error={formik.touched.town && Boolean(formik.errors.town)}
+            helperText={formik.touched.town && formik.errors.town}
           />
         </div>
 
@@ -325,8 +414,9 @@ function DonateForm(props) {
           <FormField
             type='checkbox'
             name='profileVisibility'
+            value={formik.values.profileVisibility}
+            onChange={formik.handleChange}
             label='Make my donation anonymous to organizer and others'
-            fullWidth
             style={{fontSize: '0.5rem'}}
           />
           <span className={classes.profileVisibilityLabel}>Leave my donation visible to organizer and others</span>
@@ -344,7 +434,7 @@ function DonateForm(props) {
       </div>
 
       <span className={classes.submitButtonWrapper}>
-        <FormSubmitButton formState={formState} />
+        <FormSubmitButton formState={formState} handleFormSubmit={handleFormSubmit} />
       </span>
 
       <footer className={classes.formFooter}>
@@ -352,10 +442,10 @@ function DonateForm(props) {
           By continuing, you agree to the Givar terms and acknowledge receipt
           of our privacy policy.
         </small>
-        <Link to={`/project/ffd`} className={classes.backToProjectLink}>To Project Profile</Link>
+        <Link to={`/project/${props.id}`} className={classes.backToProjectLink}>To Project Profile</Link>
       </footer>
     </form>
   )
 }
 
-export default DonateForm
+export default React.memo(DonateForm)

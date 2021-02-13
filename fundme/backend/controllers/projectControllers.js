@@ -56,7 +56,7 @@ function makeData(data) {
     Project.find({}, (error, projects) => {
       if (error) 
         res.json(makeError(error, 'FAILED TO GET ALL PROJECT.'))
-      res.json(makeData(projects))
+      res.status(200).json(projects)
     })
    },
 

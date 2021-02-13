@@ -55,51 +55,41 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function DonatePage() {
+function DonatePage(props) {
   const classes = useStyles()
   const { id } = useParams()
-  // const [ project, setProject ] = useState([])
-  const project = store.get('DonatePageProject')
+  const [ project, setProject ] = useState(props.location.state || null)
+  // const project = store.get('DonatePageProject')
 
-  const fetchProject = () => {
+  useEffect(() => {
     const PROJECT_URL = `http://127.0.0.1:4000/projects/${id}` 
     axios(PROJECT_URL)
     .then(response => {
       const project = response.data
-      console.log(project)
-      store.set('DonatePageProject', project)
+      setProject(project)
     })
     .catch(error => console.log(error))
-  }
-
-  useEffect(() => {
-   fetchProject()
-  },[])
+  },[id])
   
-
-  return (
+  if (project) {
+    return (
     <Container maxWidth={'xl'} className={classes.root}>
       <ProjectPageHeader />
       <Container maxWidth={'md'} className={classes.wrapper}>
-        <Grid xs={12} className={classes.innerWrapper} >
-          <Grid xs={12} md={7} className={classes.innerForm}>
-            <DonateForm  />
+        <Grid item xs={12} className={classes.innerWrapper} >
+          <Grid item xs={12} md={7} className={classes.innerForm}>
+            <DonateForm projectId={id}  />
           </Grid>
-          <Grid xs={12} md={4} className={classes.innerHeader}>
-            <DonateFormHeader 
-              projectName={project.projectName}
-              currency={project.stats.currency}
-              currentDonations={project.stats.current}
-              targetDonations={project.stats.target}
-              numberOfFunders={project.stats.funders.length} 
-              ownerName={`${project.owner.ownerFirstName} ${project.ownerLastName}`}
-            />
+          <Grid item xs={12} md={4} className={classes.innerHeader}>
+            <DonateFormHeader project={project} />
           </Grid>
         </Grid>
       </Container>
       <DonateFormFooter />
     </Container>
-  )
+  )} else {
+    return (<h1>LOADING...</h1>)
+  }
 }
 
 export default DonatePage

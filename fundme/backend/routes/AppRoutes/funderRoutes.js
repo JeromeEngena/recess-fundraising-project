@@ -19,5 +19,7 @@ router.get('/', Funder.getAllFunders)
 router.get('/:id', Funder.getFunderByID)
 router.delete('/:id', Funder.deleteFunder)
 router.get('/params/:telephone', Funder.findFunderByParam)
+router.post('/save', Funder.saveFunder)
+router.post('/request-to-pay', Funder.requestToPay)
 
 module.exports = router

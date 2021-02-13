@@ -19,6 +19,7 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
@@ -27,6 +28,9 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.11",
-    "nodemailer": "^6.4.17"
+    "mtn-momo": "^1.0.6",
+    "nodemailer": "^6.4.17",
+    "uniqid": "^5.2.0",
+    "uuid": "^8.3.2"
   }
 }

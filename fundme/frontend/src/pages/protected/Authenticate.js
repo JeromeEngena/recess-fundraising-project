@@ -3,9 +3,9 @@ import decode from 'jwt-decode'
 import { Redirect, Router } from 'react-router-dom'
 
 const checkAuth = () => {
-  const token = localStorage.getItem('token')
+  const accessToken = localStorage.getItem('accessToken')
   const refreshToken = localStorage.getItem('refreshToken')
-  if (!token || !refreshToken) {
+  if (!accessToken || !refreshToken) {
     return false
   }
 
@@ -27,7 +27,8 @@ function Authenticate({ component: Component, ...rest }) {
       checkAuth ? (
         <Component {...props} />
       ) : (
-        <Redirect to={{ pathname: '/' }} />
+        // <Redirect to={{ pathname: '/' }} from={props.location}/>
+        <div>Bye bye</div>
       )
     )}
     />
@@ -35,3 +36,25 @@ function Authenticate({ component: Component, ...rest }) {
 }
 
 export default Authenticate
+
+// class Auth {
+//   constructor() {
+//     this.authenticated = false
+//   }
+
+//   login(callback) {
+//     this.authenticated = true
+//     callback()
+//   }
+
+//   logout(callback) {
+//     this.authenticated = false
+//     callback()
+//   } 
+
+//   isAuthenticated() {
+//     return this.authenticated
+//   }
+// }
+
+// export default new Auth()

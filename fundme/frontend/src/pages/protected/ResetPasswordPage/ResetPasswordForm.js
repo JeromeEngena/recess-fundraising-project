@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import FormField from '../../../components/FormField'
-import { validatePassword, validatePasswordEquality } from '../../../utils/validation'
+import validate from '../../../utils/validation'
 import TogglePasswordVisibility from './TogglePasswordVisibility'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -40,8 +40,8 @@ function ResetPasswordForm() {
   }
 
   const validationSchema = yup.object({
-    password1: validatePassword,
-    password2: validatePasswordEquality
+    password1: validate.validatePassword,
+    password2: validate.validatePasswordEquality
   })
 
   const initialalues = {

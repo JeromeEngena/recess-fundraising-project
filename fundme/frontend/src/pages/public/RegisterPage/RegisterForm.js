@@ -3,13 +3,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import FormField from '../../../components/FormField'
-import { 
-  validatePassword, 
-  validateEmail, 
-  validatePhoneNumber, 
-  validatePasswordEquality,
-  validateName
-} from '../../../utils/validation'
+import validate from '../../../utils/validation'
 import TogglePasswordVisibility from '../../protected/ResetPasswordPage/TogglePasswordVisibility'
 import  { makeStyles } from '@material-ui/core/styles'
 
@@ -34,12 +28,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const validationSchema = yup.object({
-  first_name: validateName('First Name'),
-  last_name: validateName('Last Name'),
-  email: validateEmail,
-  telephone: validatePhoneNumber,
-  password1: validatePassword,
-  password2: validatePasswordEquality
+  first_name: validate.validateName('First Name'),
+  last_name: validate.validateName('Last Name'),
+  email: validate.validateEmail,
+  telephone: validate.validatePhoneNumber,
+  password1: validate.validatePassword,
+  password2: validate.validatePasswordEquality
 })
 
 const initialValues = {

@@ -29,20 +29,20 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 module.exports = mongoose.model('Funder', new Schema({
-  first_name: { type: String, required: true, immutable: true },
-  last_name: { type: String, required: true, immutable: true },
+  firstName: { type: String, required: true, immutable: true },
+  lastName: { type: String, required: true, immutable: true },
   email: { type: String, default: null },
   telephone: { type: String, required: true, immutable: true },
   deleted: { type: Boolean, default: false },
-  projects_funded: [{
-    _id: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
-    open_profile: { type: Boolean, default: false, required: true },
+  fundraisers: [{
+    projectId: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+    visibleProfile: { type: Boolean, default: false, required: true },
     currency: { type: String, default: 'UGX', enum: ['UGX'] },
     amount: { type: Number, required: true },
     tip: { type: Number, default: 0, required: true },
     date: { type: String, default: Date.now },
     location: [{
-      country: { type: String, default: 'Uganda', enum: ['Uganda'] },
+      country: { type: String, default: 'Uganda' },
       precise: {
         type: { type: String, enum: ['Point'], default: 'Point' },
         coordinates: { type: [Number], required: true }

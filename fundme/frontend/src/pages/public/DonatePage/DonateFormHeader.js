@@ -25,8 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   projectProfileImageBox: {
     width: '100%',
-    height: '250px',
-    backgroundColor: theme.palette.primary.light
+    // height: '250px',
   },
   projectProfileImage: {
     width: '100%',
@@ -41,8 +40,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'pink',
     padding: theme.spacing(1),
     borderRadius: '10px',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   current: {
     fontSize: '1.6rem',
@@ -185,33 +184,33 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-function DonateFormHeader(props) {
+function DonateFormHeader({project}) {
   const classes = useStyles()
   return (
     <div className={classes.donateFormHeader}>
-      <h2 className={classes.projectTitle}>{props.projectName}</h2>
+      <h2 className={classes.projectTitle}>{project.projectName}</h2>
       <div className={classes.projectProfileImageBox}>
         <img 
-          src='https://images.gofundme.com/2SPVJP0Ym0o6QzDz86OfNcr3rM0=/720x405/https://d2g8igdw686xgo.cloudfront.net/42249576_1569326715122969_r.jpeg' 
+          src={project.projectDescription.coverImages[0].path} 
           alt='profile'
           className={classes.projectProfileImage} />
       </div>
       <div className={classes.projectStats}>
         <div className={classes.fundingStats}>
-          <span className={classes.current}>{`${props.currency}. ${props.currentDonations}`}</span>
-          <span className={classes.target}> of <span className={classes.targetInner}></span>{`${props.currency}. ${props.targetDonations}`}</span>
+          <span className={classes.current}>{`${project.stats.currency}. ${project.stats.current}`}</span>
+          <span className={classes.target}> of <span className={classes.targetInner}></span>{`${project.stats.currency}. ${project.stats.target}`}</span>
         </div>
         <div className={classes.progressBarOuter}>
           <div className={classes.progressBarInner}></div>
         </div>
         <p className={classes.fundersStats}>
           <CgTimelapse className={classes.clockIcon} /> 
-          <span className={classes.funders}>{`Raised by ${props.numberOfFunders} people in 16 months`}</span>
+          <span className={classes.funders}>{`Raised by ${project.stats.funders.length} people in 16 months`}</span>
         </p>
       </div>
 
       <div className={classes.projectOwnerDetails}>
-        <h3 className={classes.ownerName}>{`About ${props.ownerName}`}</h3>
+        <h3 className={classes.ownerName}>{`About ${project.owner.ownerFirstName} ${project.owner.ownerLastName}`}</h3>
         <div className={classes.profile}>
           <div className={classes.ownerProfileImageBox}>
             <img 

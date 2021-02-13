@@ -5,8 +5,8 @@ import axios from 'axios'
 import store from 'store'
 import FormField from '../../../components/FormField'
 import { makeStyles } from '@material-ui/core/styles'
-import { validateEmail, validatePassword } from '../../../utils/validation'
-import { Link } from 'react-router-dom'
+import validate from '../../../utils/validation'
+import { Link, useHistory } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
 
 const useStyles = makeStyles(theme => ({
@@ -52,13 +52,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const validationSchema = yup.object({
-  email: validateEmail,
-  password: validatePassword
+  email: validate.validateEmail,
+  password: validate.validatePassword
 })
 
 function LoginForm({ userKnowsPassword, setUser }) {
   const classes = useStyles()
   const [knowsPassword, setKnowsPassword] = useState(userKnowsPassword)
+  const history = useHistory()
   let initialValues = {}
   
   knowsPassword ? initialValues = {email: '', password: '' } : initialValues = { email: '' }
@@ -77,6 +78,7 @@ function LoginForm({ userKnowsPassword, setUser }) {
         setUser(result.data)
         store.set('accessToken', result.data.accessToken)
         store.set('refreshToken', result.data.refreshToken)
+        history.push('/')
       }
     } else {
       console.log(`Email ${values.email}`);

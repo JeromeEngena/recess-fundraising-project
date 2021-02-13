@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 function FormField(props) {
   const classes = useStyles()
-  const { type, name, label, value, checked, options, ...others } = props
+  const { type, name, label, value, options, ...others } = props
 
   switch (type) {
     case 'text': return (
@@ -92,13 +92,14 @@ function FormField(props) {
     case 'checkbox': return (
       <Checkbox
         name={name}
-        checked={checked}
+        checked={value}
         color='secondary'
         size="small"
         disableRipple
         disableFocusRipple
         disableTouchRipple
         inputProps={{ 'aria-label': 'checkbox with small size' }}
+        {...others}
       />
     )
 
