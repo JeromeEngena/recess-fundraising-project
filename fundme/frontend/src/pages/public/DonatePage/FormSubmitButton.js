@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase',
     border: 'none',
     borderRadius: '5px',
-    fontSize: '0.8rem',
+    fontSize: '0.8rfcerem',
     letterSpacing: '0.3rem',
     backgroundColor: theme.palette.secondary.light,
     color: 'white',

@@ -10,9 +10,9 @@ import Authenticate from './pages/protected/Authenticate'
 import RegisterPage from './pages/public/RegisterPage/RegisterPage'
 import ProjectPage from './pages/public/ProjectPage/ProjectPage'
 import DonatePage from './pages/public/DonatePage/DonatePage'
+import ConceptPage from './pages/public/ConceptPage/ConceptPage'
 import CreateFundraiserPage from './pages/protected/CreateProjectPage/CreateProjectPage'
 import { UserContext } from './context/Auth/'
-import store from 'store'
 
 function App() {
   const [ user, setUser ] = useState('hello')
@@ -29,8 +29,10 @@ function App() {
 
           <Route exact path='/project/donate/:id' component={DonatePage} />
 
-
           <Route exact path='/dashboard' component={Dashboard} />
+
+          <Route exact path='/concept-paper' component={ConceptPage} />
+
           <Route exact path='/reset-password' component={ResetPasswordPage} />
 
           <UserContext.Provider value={userProviderValue}>

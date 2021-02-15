@@ -112,6 +112,10 @@ function makeData(data) {
       })
    },
 
+   addFunderToProject: (req, res , next) => {
+     // update current from here
+   }
+
   //  getProjectFunders: (req, res, next) => {
   //   const { id } = req.params
   //   Project.findById(id, (error, project) => {

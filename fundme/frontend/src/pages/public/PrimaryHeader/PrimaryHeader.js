@@ -47,8 +47,19 @@ const useStyles = makeStyles(theme => ({
     listStyle: 'none',
     display: 'flex',
     alignItems: 'center',
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     fontSize: '0.95rem'
+  },
+  headerLinkLogin: {
+    listStyle: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.95rem',
+    borderRight: '2px solid white',
+    paddingRight: theme.spacing(1)
+  },
+  headerLinkIcon: {
+    marginRight: theme.spacing(0.5)
   }
 }))
 
@@ -87,7 +98,7 @@ function PrimaryHeader() {
               {links.map((link, index) => {
                   if (index === 0) {
                     return (
-                        <li className={classes.headerLink}>
+                        <li className={classes.headerLinkLogin}>
                           <BiLogIn size={23} className={classes.headerLinkIcon} />
                           <RouterLink to={link.path}>{link.text}</RouterLink>
                         </li>

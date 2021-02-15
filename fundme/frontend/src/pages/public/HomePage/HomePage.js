@@ -29,6 +29,10 @@ const useStyles = makeStyles(theme => ({
     backgroundSize: 'cover',
     paddingTop: theme.spacing(0)
   },
+  conceptBox: {
+    height: '100%',
+    position: 'relative'
+  },
   concept: {
     backgroundColor: theme.palette.secondary.main,
     color: 'white',
@@ -38,20 +42,15 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '180px',
     borderRadius: '10px',
     boxShadow: '5px 5px 15px 5px rgba(0,0,0,0.19)',
-    bottom: theme.spacing(5),
-    right: theme.spacing(5),
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    [theme.breakpoints.up('md')]: {
-      right: theme.spacing(25),
-    },
-    [theme.breakpoints.up('lg')]: {
-      right: theme.spacing(35),
-    }
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
+    padding: theme.spacing(1)
+  },
+  buttonLink: {
+    textDecoration: 'none'
   },
   conceptHeader: {
-    marginBottom: theme.spacing(0),
+    margin: theme.spacing(0),
     paddingLeft: theme.spacing(1)
   },
   conceptParagraph: {
@@ -59,7 +58,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: '0.95rem'
   },
   fundraisersBox: {
-    backgroundColor: 'red',
     display: 'flex'
   }
 }))
@@ -79,9 +77,6 @@ function Home() {
       .catch(error => {
         console.log(error);
       })
-    // return () => {
-    //   store.remove('projects')
-    // }
   }, [])
 
   return (
@@ -89,15 +84,17 @@ function Home() {
       <PrimaryHeader />
       <main style={{padding: 0}} className={classes.main}>
         <section style={{backgroundImage: `url(${BANNER_IMAGE})`}} className={classes.homeBanner}>
-         <Grid xs={5} className={classes.concept}>
-           <h3 className={classes.conceptHeader}>Concept Paper</h3>
-           <p className={classes.conceptParagraph}>
-             This is a concept project for Group 21 of the Computer Science Year 1 class at Makerere University. 
-           </p>
-          <RouterLink to='/concept-paper'>
-            <Button>Read concept</Button>
-          </RouterLink>
-         </Grid>
+         <Container maxWidth={'md'} className={classes.conceptBox}>
+          <div className={classes.concept}>
+            <h3 className={classes.conceptHeader}>Concept Paper</h3>
+            <p className={classes.conceptParagraph}>
+              This is a concept project for Group 21 of the Computer Science Year 1 class at Makerere University. 
+            </p>
+            <RouterLink to='/concept-paper' className={classes.buttonLink}>
+              <Button>Read concept</Button>
+            </RouterLink>
+          </div>
+          </Container>
         </section>
         {/* <Fundraisers projects={projects} /> */}
         {projects && <Fundraisers projects={projects} />}

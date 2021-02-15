@@ -54,10 +54,10 @@ function makeData(data) {
    },
 
    getAllFunders: (req, res, next) => {
-     Funder.find({}, (error, funder) => {
+     Funder.find({}, (error, funders) => {
       if (error)
         res.json(makeError(error, 'FAILED TO GET ALL THE FUNDERS!'))
-      res.json(makeData(funder))
+      res.json(makeData(funders))
      })
    },
 

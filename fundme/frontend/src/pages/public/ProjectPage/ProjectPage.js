@@ -98,9 +98,43 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
   },
+  shareButtonsBottom: {
+    width: '100%',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '0 auto'
+  },
   donateLink: {
     textDecoration: 'none',
     marginTop: theme.spacing(1),
+  },
+  donateLinkBottom: {
+    textDecoration: 'none',
+    marginTop: theme.spacing(1)
+  },
+  shareButtonBottom: {
+    padding: '12px 50px',
+    textTransform: 'capitalize',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    width: '100%',
+    maxWidth: '300px',
+    minWidth: '300px',
+    backgroundColor: theme.palette.secondary.light,
+    color: 'white',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    '&:focus': {
+      border: 'none',
+      outline: 'none'
+    }
   },
   shareButton: {
     padding: '12px 50px',
@@ -110,6 +144,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: '1.2rem',
     fontWeight: 700,
     width: '100%',
+    maxWidth: '300px',
     backgroundColor: theme.palette.secondary.light,
     color: 'white',
     cursor: 'pointer',
@@ -136,6 +171,15 @@ const useStyles = makeStyles(theme => ({
       position: 'relative',
       // top: theme.spacing(-21)
     }
+  },
+  contacts: {
+    backgroundColor: 'red',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    width: '80%',
+    margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'space-around'
   }
 }))
 
@@ -155,7 +199,7 @@ function ProjectPage(props) {
   },[id])
 
   useEffect(() => { 
-    document.title = `Project ${id}`
+    document.title = `Fundraiser: ${project.projectName}`
   })
 
   if (project){ 
@@ -230,9 +274,17 @@ function ProjectPage(props) {
                 {/* {project.organization ? <h4>Organization Name</h4> : <></>} */}
               </div>
             </div>
-            <div className={classes.shareButtons}>
-              <button className={classes.bigButton}>Share</button>
-              <button className={classes.bigButton}>Donate</button>
+            <div className={classes.shareButtonsBottom}>
+              <button className={classes.shareButtonBottom}>
+                  <FiShare2 className={classes.shareButtonIcon} size={25} />
+                  Share
+              </button>
+              <Link to={{pathname: `/project/donate/${id}`, state: project}} className={classes.donateLink}>
+                <button className={classes.shareButtonBottom}>
+                  <BiDonateHeart className={classes.shareButtonIcon} size={25} />
+                  Donate
+                </button>
+              </Link>
             </div>
             <div className={classes.contacts}>
               <button className={classes.mediumButton}>Send Message</button>

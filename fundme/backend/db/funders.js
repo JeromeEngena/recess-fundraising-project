@@ -9,16 +9,17 @@ const db = {
     })
   },
 
-  findExistingFunderByTelephone: ({query, callback}) => {
-    Funder.findOne(query, (error, funder) => {
+  findIfFunderExists: ({query, callback}) => {
+    Funder.findOne(query, (error, funderxists) => {
       if (error)
         callback(error, null)
-      callback(null, funder)
+      callback(null, funderExists)
     })
   },
 
   saveFunderToDB: ({funder, callback}) => {
-    Funder.save(funder, (error, funder) => {
+    let funderModel = new Funder(funder)
+    funderModel.save((error, funder) => {
       if (error)
         callback(error, null)
       callback(null, funder)
@@ -26,13 +27,33 @@ const db = {
   },
 
   updateFunder: ({query, update, callback}) => {
-    Funder.findOneAndUpdate(query, update, {returnOriginal: false}, (error, updatedFunder) => {
+    Funder.findOneAndUpdate(query, update, {new: true}, (error, updatedFunder) => {
       if (error)
         callback(error, null)
       if (!updatedFunder)
         callback(null, null)
       callback(null, updatedFunder)
     })
+  },
+
+  getAllFunders: ({callback}) => {
+    Funder.find({}, (error, funders) => {
+      if (error)
+        callback(error, null)
+      callback(null, funders)
+    })
+  },
+
+  deleteFunder: ({query, callback}) => {
+    Funder.findOneAndDelete(query, (error, deletedFunder) => {
+      if (error)
+        callback(error, null)
+      callback(null, deletedFunder)
+    })
+  },
+
+  findSectionOfFunder: ({query, callback}) => {
+    
   }
 }
 

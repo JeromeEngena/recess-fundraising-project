@@ -23,7 +23,7 @@ const jwt = require('jsonwebtoken')
 
 const bcrypt = require('bcrypt')
 const { User, Project } = require('../models')
-const jwtAuth = require('../services/Auth')
+const jwtAuth = require('../utils/jwt')
 
 async function hashPassword(password, callback) {
   const SALT_ROUNDS = 10
