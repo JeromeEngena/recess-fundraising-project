@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.11",
     "mtn-momo": "^1.0.6",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.17",
     "uniqid": "^5.2.0",
     "uuid": "^8.3.2"

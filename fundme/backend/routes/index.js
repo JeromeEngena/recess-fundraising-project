@@ -1,3 +1,3 @@
 exports.userRoutes = require('./userRoutes')
-exports.projectRoutes = require('./projectRoutes')
+exports.fundraiserRoutes = require('./fundraiserRoutes')
 exports.funderRoutes = require('./funderRoutes')

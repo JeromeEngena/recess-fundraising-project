@@ -1,5 +1,5 @@
 const uniqid = require('uniqid')
 
-exports.generateUniqueId = () => {
+exports.generateUniqid = () => {
   return uniqid.time()
 }

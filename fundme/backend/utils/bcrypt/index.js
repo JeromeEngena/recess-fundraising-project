@@ -1,21 +1,21 @@
 const bcrypt = require('bcrypt')
 
-const passwordEncrypter = {
-  hashPassword: ({password, saltRounds, callback}) => {
-    bcrypt.hash(password, saltRounds, (error, hashedPassword) => {
-      if (error)
-        callback(error, null)
-      callback(null, hashedPassword)
-    })
-  },
-
-  comparePasswords: ({unencryptedPassword, encryptedPassword, callback}) => {
-    bcrypt.compare(unencryptedPassword, encryptedPassword, (error, result) => {
-      if (error)
-        callback(error, null)
-      callback(null, result)
-    })
-  }
+exports.encryptData = ({data, saltRounds = 10, callback}) => {
+  bcrypt.hash(data, saltRounds, (error, hashedData) => {
+    if (error)
+      callback(error, null)
+    if (!hashedData)
+      callback(null, null)
+    callback(null, hashedData)
+  })
 }
 
-export default passwordEncrypter
+exports.compareWithEncryptedData = ({unencryptedData, encryptedData, callback}) => {
+  bcrypt.compare(unencryptedData, encryptedData, (error, result) => {
+    if (error)
+      callback(error, null)
+    if (!result)
+      callback(null, null)
+    callback(null, result)
+  })
+}

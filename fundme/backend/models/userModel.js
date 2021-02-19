@@ -1,24 +1,9 @@
-/**
- * _id: ObjectID
- * name: String
- * email: String
- * password: String
- * telephone: [ String ]
- * NIN: String
- * location: String
- * verified: Boolean
- * projects: [ _projectID: ObjectID (_projectID) ]
- * _dateCreated: Date
- * _dateUpdated: Date
- * _dateClosed: Date
- */
+const model = require('mongoose').model
+const Schema = require('mongoose').Schema
 
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-
-module.exports = mongoose.model('User', new Schema({
-  first_name: { type: String, required: true, immutable: true },
-  last_name: { type: String, required: true, immutable: true },
+module.exports = model('User', new Schema({
+  firstName: { type: String, required: true, immutable: true },
+  lastName: { type: String, required: true, immutable: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
   NIN: { type: String, default: null },
@@ -29,13 +14,9 @@ module.exports = mongoose.model('User', new Schema({
     telephone: { type: String, required: true }
   },
   location: {
-    country: { type: String, default: 'Uganda' },
-    precise: {
-      type: { type: String, enum: ['Point'], default: 'Point' },
-      coordinates: { type: [Number] }
-    }
+    country: { type: String, default: 'Uganda' }
   },
-  projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+  fundraisers: { type: [Schema.Types.ObjectId], ref: 'Fundraiser', required: true, default: [] },
   _dateClosed: { type: String, default: null }
 }, {
   collection: 'users',

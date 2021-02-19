@@ -1,3 +1,3 @@
 exports.User = require('./userControllers')
-exports.Project = require('./projectControllers')
-exports.Funder = require('./funderController')
+exports.Fundraiser = require('./FundraiserControllers')
+exports.Funder = require('./funderControllers')

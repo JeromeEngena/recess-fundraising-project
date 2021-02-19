@@ -1,0 +1,1 @@
+exports.fundraiserCategories = require('./fundraiserCategories')

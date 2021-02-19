@@ -1,10 +1,10 @@
 require('dotenv').config()
-const express = require('express')
-const router = express.Router()
-const bodyParser = require('body-parser')
-router.use(bodyParser.urlencoded({ extended: true }))
-router.use(bodyParser.json())
 const jwt = require('jsonwebtoken')
+
+// const router = require('express').Router()
+// const bodyParser = require('body-parser')
+// router.use(bodyParser.urlencoded({ extended: true }))
+// router.use(bodyParser.json())
 
 const refreshTokens = []
 const accessTokens = []
@@ -24,7 +24,7 @@ exports.authenticateToken = (req, res, next) => {
 }
 
 exports.generateAccessToken = (serializedUser) => {
-  const accessToken = jwt.sign(serializedUser, process.env.JWT_SECRET_ACCESS_KEY, { expiresIn: '2h' })
+  const accessToken = jwt.sign(serializedUser, process.env.JWT_SECRET_ACCESS_KEY, { expiresIn: '60s' })
   accessTokens.push(accessToken)
   return accessToken
 }
