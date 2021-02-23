@@ -23,10 +23,11 @@ app.use(cors())
 app.use('/users', routes.userRoutes)
 app.use('/fundraisers', routes.fundraiserRoutes)
 app.use('/funders', routes.funderRoutes)
+app.use('/api')
 
 // production setup
 if (process.env.NODE_ENV == 'production') {
-  app.use(express.static(path.resolve(__dirname, '../frontend/build')))
+  app.use(express.static(path.resolve(__dirname, 'frontend/build')))
 }
 
 // db connections
@@ -36,13 +37,6 @@ mongoose.connect(process.env.DB_URI, {useNewUrlParser: true, useFindAndModify: f
     console.log(colors.red('FAILED TO CONNECT TO DATABASE. INITIAL CONNECTION ERROR'))
     console.log(colors.red(`ERROR_NAME: ${error.name} \nERROR_MESSAGE: ${error.message}`))  
   })
-
-
-// routes
-app.get('/', (req, res, next) => {
-  res.status(200).send('Hello there, welcome to fundMe api.')
-})
-
 
 // server setup
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`)) 
