@@ -1,10 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Ticker from '../../../components/Ticker'
 import { Container } from '@material-ui/core'
 import { BiLogIn } from 'react-icons/bi'
 import RouterLink from '../../../components/RouteLink'
 import { Link } from 'react-router-dom'
+import {connect} from 'react-redux'
+import LogoutUser from '../../../containers/LogoutUser'
+import Button from '../../../components/Button'
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -74,8 +77,13 @@ const links = [
   }
 ]
 
-function PrimaryHeader() {
+function PrimaryHeader({user}) {
   const classes = useStyles()
+
+  useEffect(() => {
+    return
+  }, [user.authenticated])
+
   return (
     <header className={classes.header}>
         {/* top header with ticker */}
@@ -95,7 +103,7 @@ function PrimaryHeader() {
           <nav className={classes.nav}>
             <RouterLink to='/'><h5 className={classes.logo}>GIVAR</h5></RouterLink>
             <ul className={classes.headerLinks}>
-              {links.map((link, index) => {
+              {!user.authenticated ? links.map((link, index) => {
                   if (index === 0) {
                     return (
                         <li className={classes.headerLinkLogin}>
@@ -110,12 +118,20 @@ function PrimaryHeader() {
                       </li>
                     )
                   }
-              })}
+              }) : 
+              (<LogoutUser>
+                <Button style={{padding: '3px 11px'}}>Logout</Button>
+              </LogoutUser>)}
             </ul>
           </nav>
         </Container>
     </header>
   )
 }
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
 
-export default PrimaryHeader
+export default connect(mapStateToProps)(PrimaryHeader)

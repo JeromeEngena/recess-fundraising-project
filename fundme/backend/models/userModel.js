@@ -16,13 +16,13 @@ module.exports = model('User', new Schema({
   location: {
     country: { type: String, default: 'Uganda' }
   },
-  fundraisers: { type: [Schema.Types.ObjectId], ref: 'Fundraiser', required: true, default: [] },
+  fundraisers: { type: [Schema.Types.ObjectId], ref: 'Fundraiser', default: [] },
   _dateClosed: { type: String, default: null }
 }, {
   collection: 'users',
   minimize: false,
   strict: true,
-  useNestedStrict: true,
+  useNestedStrict: true, 
   timestamps: {
     createdAt: '_dateCreated',
     updatedAt: '_dateUpdated'

@@ -39,12 +39,15 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     maxWidth: '180px',
     borderRadius: '10px',
     boxShadow: '5px 5px 15px 5px rgba(0,0,0,0.19)',
-    bottom: theme.spacing(4),
-    right: theme.spacing(4),
-    padding: theme.spacing(1)
+    bottom: theme.spacing(2.5),
+    left: theme.spacing(4),
+    padding: theme.spacing(2.5),
+    paddingRight: theme.spacing(0),
+    paddingLeft: theme.spacing(0)
   },
   buttonLink: {
     textDecoration: 'none'
@@ -55,7 +58,8 @@ const useStyles = makeStyles(theme => ({
   },
   conceptParagraph: {
     paddingLeft: theme.spacing(1),
-    fontSize: '0.95rem'
+    fontSize: '0.95rem',
+    width: '75%'
   },
   fundraisersBox: {
     display: 'flex'
@@ -64,18 +68,18 @@ const useStyles = makeStyles(theme => ({
 
 function Home() {
   const classes = useStyles()
-  const [ projects, setProjects ] = useState(store.get('projects') || [])
+  const [ projects, setProjects ] = useState([])
   const { latitude, longitude, positionError } = usePosition()
   
   useEffect(() => {
-    axios.get('http://127.0.0.1:4000/projects')
+    axios.get('http://127.0.0.1:4000/fundraisers')
       .then(response => {
-        // console.log(response.data);
-        store.set('projects', response.data)
-        console.log(projects);
+        const projects = response.data
+        console.log(projects)
+        setProjects(projects)
       })
       .catch(error => {
-        console.log(error);
+        setProjects(null)
       })
   }, [])
 
@@ -97,7 +101,7 @@ function Home() {
           </Container>
         </section>
         {/* <Fundraisers projects={projects} /> */}
-        {projects && <Fundraisers projects={projects} />}
+        {projects ? (<Fundraisers projects={projects} />) : (<h2>Loading...</h2>)}
       </main>
       <PrimaryFooter />
     </div>

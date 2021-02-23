@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, {useState, useEffect} from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
@@ -8,6 +8,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import validate from '../../../utils/validation'
 import { Link, useHistory } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
+
+import {connect} from 'react-redux'
+import { fetchUser } from '../../../redux/user/userActions'
 
 const useStyles = makeStyles(theme => ({
   formSection: {
@@ -56,35 +59,33 @@ const validationSchema = yup.object({
   password: validate.validatePassword
 })
 
-function LoginForm({ userKnowsPassword, setUser }) {
+function LoginForm({ userKnowsPassword, loginUser, user }) {
   const classes = useStyles()
   const [knowsPassword, setKnowsPassword] = useState(userKnowsPassword)
   const history = useHistory()
   let initialValues = {}
+
+  useEffect(() => {
+    user.authenticated && history.push('/dashboard')
+  }, [user])
   
   knowsPassword ? initialValues = {email: '', password: '' } : initialValues = { email: '' }
-
-  const handleFormSubmit = async (values, { resetForm }) => {
+  
+  const handleFormSubmit = (values, {resetForm}) => {
     if (values.password) {
-      let response = () => {
-        return new Promise(function(resolve, reject) {
-          axios.post('http://127.0.0.1:4000/users/login', { email: values.email, password: values.password })
-          .then(response => resolve(response))
-        })
-      }
-      let result = await response()
-      if (result.data.status === 200) {
+      loginUser({email: values.email, password:values.password})
+      if (user.authenticated === true) {
         resetForm()
-        setUser(result.data)
-        store.set('accessToken', result.data.accessToken)
-        store.set('refreshToken', result.data.refreshToken)
-        history.push('/')
+        history.push('/dashboard')
       }
-    } else {
-      console.log(`Email ${values.email}`);
+      return
+    }
+
+    if (!values.password) {
+
     }
   }
-  
+
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
@@ -145,4 +146,16 @@ function LoginForm({ userKnowsPassword, setUser }) {
   )
 }
 
-export default LoginForm
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loginUser: ({email, password}) => dispatch(fetchUser({email:email, password:password}))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

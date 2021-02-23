@@ -58,20 +58,30 @@ const useStyles = makeStyles(theme => ({
 function DonatePage(props) {
   const classes = useStyles()
   const { id } = useParams()
-  const [ project, setProject ] = useState(props.location.state || null)
-  // const project = store.get('DonatePageProject')
+  const [ fundraiser, setFundraiser ] = useState(null)
+  const [fundraiserOwner, setFundraiserOwner] = useState(null)
 
   useEffect(() => {
-    const PROJECT_URL = `http://127.0.0.1:4000/projects/${id}` 
-    axios(PROJECT_URL)
+    axios(`http://127.0.0.1:4000/fundraisers/${id}` )
     .then(response => {
-      const project = response.data
-      setProject(project)
+      const fundraiser = response.data
+      setFundraiser(fundraiser)
+      document.title = `Donate | ${fundraiser.name}`
+      axios(`http://127.0.0.1:4000/users/${fundraiser.ownerId}`)
+        .then(response => {
+          const owner = response.data 
+          setFundraiserOwner(owner)
+        })
+        .catch(error => {
+          console.log('Failed to get fundraiser owner from db.')
+        })
     })
-    .catch(error => console.log(error))
-  },[id])
+    .catch(error => {
+      console.log('Failed to get fundraiser from db.')
+    })
+  },[])
   
-  if (project) {
+  if (fundraiser && fundraiserOwner) {
     return (
     <Container maxWidth={'xl'} className={classes.root}>
       <ProjectPageHeader />
@@ -81,7 +91,7 @@ function DonatePage(props) {
             <DonateForm projectId={id}  />
           </Grid>
           <Grid item xs={12} md={4} className={classes.innerHeader}>
-            <DonateFormHeader project={project} />
+            <DonateFormHeader fundraiser={fundraiser} fundraiserOwner={fundraiserOwner} />
           </Grid>
         </Grid>
       </Container>

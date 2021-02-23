@@ -5,6 +5,7 @@ import { FaFacebookF, FaTwitter } from 'react-icons/fa'
 import  { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import ExternalRouterLink from '../../../components/ExternalRouterLink'
+import TwitterButton from '../../../containers/TwitterButton'
 
 const useStyles = makeStyles(theme => ({
   donateFormHeader: {
@@ -184,33 +185,33 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-function DonateFormHeader({project}) {
+function DonateFormHeader({fundraiser, fundraiserOwner}) {
   const classes = useStyles()
   return (
     <div className={classes.donateFormHeader}>
-      <h2 className={classes.projectTitle}>{project.projectName}</h2>
+      <h2 className={classes.projectTitle}>{fundraiser.name}</h2>
       <div className={classes.projectProfileImageBox}>
         <img 
-          src={project.projectDescription.coverImages[0].path} 
+          src='https://images.gofundme.com/lfIDh3DRXXBf1GKOXJJ_v04_-y8=/720x405/https://d2g8igdw686xgo.cloudfront.net/53335284_1608117907238589_r.jpeg' 
           alt='profile'
           className={classes.projectProfileImage} />
       </div>
       <div className={classes.projectStats}>
         <div className={classes.fundingStats}>
-          <span className={classes.current}>{`${project.stats.currency}. ${project.stats.current}`}</span>
-          <span className={classes.target}> of <span className={classes.targetInner}></span>{`${project.stats.currency}. ${project.stats.target}`}</span>
+          <span className={classes.current}>{`${fundraiser.stats.currency}. ${fundraiser.stats.current}`}</span>
+          <span className={classes.target}> of <span className={classes.targetInner}></span>{`${fundraiser.stats.currency}. ${fundraiser.stats.target}`}</span>
         </div>
         <div className={classes.progressBarOuter}>
           <div className={classes.progressBarInner}></div>
         </div>
         <p className={classes.fundersStats}>
           <CgTimelapse className={classes.clockIcon} /> 
-          <span className={classes.funders}>{`Raised by ${project.stats.funders.length} people in 16 months`}</span>
+          <span className={classes.funders}>{`Raised by ${fundraiser.stats.funders.length} people in 16 months`}</span>
         </p>
       </div>
 
       <div className={classes.projectOwnerDetails}>
-        <h3 className={classes.ownerName}>{`About ${project.owner.ownerFirstName} ${project.owner.ownerLastName}`}</h3>
+        <h3 className={classes.ownerName}>{`About ${fundraiserOwner.firstName} ${fundraiserOwner.lastName}`}</h3>
         <div className={classes.profile}>
           <div className={classes.ownerProfileImageBox}>
             <img 
@@ -231,10 +232,12 @@ function DonateFormHeader({project}) {
                 Facebook 
                 {/* <FaFacebookF size={12} className={classes.socialIcon} />  */}
               </div>
+              <TwitterButton>
               <div className={classes.socialIconBoxTwitter}>
                 Twitter 
                 {/* <FaTwitter size={12} className={classes.socialIcon} /> */}
               </div>
+              </TwitterButton>
             </div>
           </div>
         </div>

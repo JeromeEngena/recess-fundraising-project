@@ -1,8 +1,10 @@
 import { Container } from '@material-ui/core'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import RouterLink from '../../../components/RouteLink'
 import { BiLogIn } from 'react-icons/bi'
+import {connect} from 'react-redux'
+import LogoutUser from '../../../containers/LogoutUser'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,26 +37,47 @@ const useStyles = makeStyles(theme => ({
   },
   headerLinkIcon: {
     color: 'white'
+  },
+  logout: {
+    color: 'white'
   }
 }))
 
-function ProjectPageHeader() {
+function ProjectPageHeader({user}) {
   const classes = useStyles()
+
+  useEffect(() => {
+    return
+  }, [user.authenticated])
 
   return (
     <nav className={classes.root}>
       <Container maxWidth={'lg'} className={classes.header}>
         <RouterLink to='/'><h5 className={classes.logo}>GIVAR</h5></RouterLink>
         <div className={classes.headerRight}>
-          <span className={classes.groupedLink}>
+          {!user.authenticated === true ? 
+          (<>
+            <span className={classes.groupedLink}>
             <BiLogIn size={23} className={classes.headerLinkIcon} />
             <RouterLink to='/register'>Sign up</RouterLink>
           </span>
           <RouterLink to='/login'>Login</RouterLink>
+          </>) : 
+          (<>
+          <LogoutUser className={classes.logout}>
+            Logout
+          </LogoutUser>
+          </>)}
         </div>
       </Container>
     </nav>
   )
 }
 
-export default ProjectPageHeader
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(ProjectPageHeader)

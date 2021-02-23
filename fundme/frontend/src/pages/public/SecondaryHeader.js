@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function SecondaryHeader(props) {
+function SecondaryHeader({user, ...props}) {
+  
   const classes = useStyles()
 
   return (

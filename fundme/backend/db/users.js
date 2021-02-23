@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const {User} = require('../models')
 
 exports.createUser = ({user, callback}) => {
+  // console.log(user)
   const newUser = new User(user)
   newUser.save((error, createdUser) => {
     if (error)
@@ -36,7 +37,7 @@ exports.getUsers = ({query, callback}) => {
       return callback(error, null)
     if (!users)
       return callback(null, null)
-    callback(nul, users)
+    callback(null, users)
   })
 }
 

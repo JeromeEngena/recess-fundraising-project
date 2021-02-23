@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     padding: '7px 15px',
     color: 'white',
     cursor: 'pointer',
-    margin: theme.spacing(1),
+    margin: theme.spacing(0),
     transition: 'all 100ms ease 0s',
     '&:hover': {
       backgroundColor: theme.palette.secondary.dark,
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 function CustomButton(props) {
   const classes = useStyles()
   return (
-    <Button className={classes.root}>{props.children}</Button>
+    <Button className={classes.root} {...props}>{props.children}</Button>
   )
 }
 

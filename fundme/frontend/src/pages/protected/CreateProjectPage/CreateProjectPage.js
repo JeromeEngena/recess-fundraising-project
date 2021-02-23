@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -6,8 +6,9 @@ import axios from 'axios'
 import FormField from '../../../components/FormField'
 import ProjectHeader from '../../public/ProjectPage/ProjectPageHeader'
 import ProjectFooter from '../../public/SecondaryFooter'
-import { Container, Grid, Input } from '@material-ui/core'
+import { Avatar, Chip, Container, Grid, Input } from '@material-ui/core'
 import validate from '../../../utils/validation'
+import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,8 +38,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  chips: {
+    backgroundColor: 'orange',
+    width: '100%'
   }
-  
 }))
 
 const initialValues = {
@@ -82,6 +86,15 @@ const handleSubmit = values => {
 
 function CreateProjectPage() {
   const classes = useStyles()
+  const [chipSelected, setChipSelected] = useState(false)
+
+  useEffect(() => {
+    document.title = 'Create Fundraiser | Givar'
+  },[])
+
+  const handleChipClick = e => {
+    setChipSelected(true)
+  }
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -108,13 +121,37 @@ function CreateProjectPage() {
               helperText={formik.touched.projectName && formik.errors.projectName}
             />
 
-            <FormField
+            {/* <FormField
               name='projectDetails.projectCategory'
               label="What are you fundraising for?"
               option={['Personal, Health, Education']}
               type='autocomplete'
               fullWidth
+            /> */}
+            <div className={classes.chips}>
+            <Chip
+              avatar={<Avatar>M</Avatar>}
+              label="Personal"
+              clickable
+              color="primary"
+              deleteIcon={<DoneIcon />}
+              variant={`${chipSelected ? 'outlined' : ''}`}
+              size='small'
+              onClick={handleChipClick}
+              value
             />
+            <Chip
+              avatar={<Avatar>M</Avatar>}
+              label="Personal"
+              clickable
+              color="primary"
+              deleteIcon={<DoneIcon />}
+              variant={`${chipSelected ? 'outlined' : ''}`}
+              size='small'
+              onClick={handleChipClick}
+              value
+            />
+            </div>
 
             <FormField
               name='projectDetails.projectTarget'

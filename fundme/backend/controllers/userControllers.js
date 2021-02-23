@@ -29,9 +29,12 @@ module.exports = {
                 callback: (error, registeredUser) => {
                   if (error)
                     return res.status(500).json({message: 'Internal Server Error', error: error.message})
+                  if (!registeredUser)
+                    res.status(500).json({message: 'Failed To Register User.'})
                   if (registeredUser)
-                    res.status(201).json({message: 'User Registered'})
-                }
+                    res.status(201).json({message: 'User Registered', userId: registeredUser._id})
+                    // send email or sms txt to verify user
+                  }
               })
             }
           })

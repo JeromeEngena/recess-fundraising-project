@@ -8,6 +8,7 @@ import { BiDonateHeart } from 'react-icons/bi'
 import axios from 'axios'
 import store from 'store'
 import DonationsProgressBar from '../../../components/DonationsProgressBar'
+import SocialShareModal from '../../../containers/SocialShareModal'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -186,23 +187,36 @@ const useStyles = makeStyles(theme => ({
 function ProjectPage(props) {
   const classes = useStyles()
   const { id } = useParams()
-  const [ project, setProject ] = useState( props.location.state || null)
+  const [ fundraiser, setFundraiser ] = useState(null)
+  const [ fundraiserOwner, setFundraiserOwner ] = useState(null)
+
+  // useEffect(() => { 
+  //   document.title = `Fundraiser: ${fundraiser.name}`
+  // }, [])
 
   useEffect(() => {
-    axios(`http://127.0.0.1:4000/projects/${id}`)
+    axios(`http://127.0.0.1:4000/fundraisers/${id}`)
       .then(response => {
-        const project = response.data
-        setProject(project)
-        console.log('running useeffect - Project Page')
+        const fundraiser = response.data
+        setFundraiser(fundraiser)
+        document.title = `Fundraiser: ${fundraiser.name}`
+        console.log('Fundraiser is:', fundraiser)
+        axios.get(`http://127.0.0.1:4000/users/${fundraiser.ownerId}`)
+          .then(response => {
+            const owner = response.data
+            setFundraiserOwner(owner)
+            console.log('User is: ' , owner)
+          })
+          .catch(error => {
+            console.log('Failed to get the fundraiser owner from the db.')
+          })
       })
-      .catch(error => console.log(error))
-  },[id])
+      .catch(error => {
+        console.log('Failed to get the fundraiser from the db.')
+      })
+  }, [])
 
-  useEffect(() => { 
-    document.title = `Fundraiser: ${project.projectName}`
-  })
-
-  if (project){ 
+  if (fundraiser && fundraiserOwner){ 
     return (
     <Container maxWidth={'xl'} className={classes.root}>
       <ProjectPageHeader />
@@ -210,26 +224,28 @@ function ProjectPage(props) {
           
           <Grid xs={12} className={classes.headerWrapper}>
             <Grid item xs={12} md={12} className={classes.mainImageBox}>
-              <img className={classes.mainImage} src={project.projectDescription.coverImages[0].path} alt={project.projectDescription.coverImages[0].title} />
+              <img className={classes.mainImage} src='https://images.gofundme.com/lfIDh3DRXXBf1GKOXJJ_v04_-y8=/720x405/https://d2g8igdw686xgo.cloudfront.net/53335284_1608117907238589_r.jpeg' alt='smiling children' />
             </Grid>
             <Grid item xs={12} component='section' className={classes.projectInfoBox}>
               <div className={classes.projectInfo}> 
                 <div className={classes.infoTop}>
-                  <h1 className={classes.projectTitle}>{project.projectName}</h1>
+                  <h1 className={classes.projectTitle}>{fundraiser.name}</h1>
                   <p className={classes.fundraiserCurrentStats}>
-                    <span className={classes.currentBox}><span className={classes.current}>{`${project.stats.currency}. ${project.stats.current}`}</span> raised</span>
-                    <span className={classes.targetBox}> of {`${project.stats.currency}. ${project.stats.target}`}</span>
+                    <span className={classes.currentBox}><span className={classes.current}>{`${fundraiser.stats.currency}. ${fundraiser.stats.current}`}</span> raised</span>
+                    <span className={classes.targetBox}> of {`${fundraiser.stats.currency}. ${fundraiser.stats.target}`}</span>
                   </p>
                   <DonationsProgressBar />
                 </div>
                 <div className={classes.shareButtons}>
-                  <button className={classes.shareButton}>
-                    <FiShare2 className={classes.shareButtonIcon} size={25} />
-                    Share
-                  </button>
+                  <SocialShareModal>
+                    <button className={classes.shareButton}>
+                      <FiShare2 className={classes.shareButtonIcon} size={25} />
+                      Share
+                    </button>
+                  </SocialShareModal>
                   <Link to={{
-                    pathname: `/project/donate/${id}`,
-                    state: project
+                    pathname: `/fundraiser/donate/${id}`,
+                    state: fundraiser
                   }} className={classes.donateLink}>
                     <button className={classes.shareButton}>
                       <BiDonateHeart className={classes.shareButtonIcon} size={25} />
@@ -239,7 +255,7 @@ function ProjectPage(props) {
                 </div>
                 <div className={classes.funders}>
                   <ul className={classes.fundersList}>
-                    {project.stats.funders.map((funder, index) => (
+                    {fundraiser.stats.funders.map((funder, index) => (
                       <li key={index}>
                         <div>
                           <Avatar />
@@ -248,11 +264,11 @@ function ProjectPage(props) {
                           <div className={classes.funderRightTop}></div>
                           <div className={classes.funderRightBottom}>
                             <span className={classes.funderDonation}>
-                              {`${funder.currency} ${funder.amount}`}
+                              {`${fundraiser.stats.currency} ${funder.donation}`}
                             </span>
-                            <span className={classes.funderDonationDate}>
+                            {/* <span className={classes.funderDonationDate}>
                               {`${funder.time.split(',')[0]}`}
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       </li>
@@ -268,9 +284,9 @@ function ProjectPage(props) {
           </Grid>
           <Grid item className={classes.projectDescription} xs={12} md={6}>
             <div className={classes.mainDescription}>
-              <div className={classes.mainDescriptionLeft}>{project.projectDescription.body}</div>
+              <div className={classes.mainDescriptionLeft}>{fundraiser.story}</div>
               <div className={classes.mainDescriptionRight}>
-                <h3>{`${project.owner.ownerFirstName} ${project.owner.ownerLastName}`}</h3>
+                <h3>{`${fundraiserOwner.firstName} ${fundraiserOwner.lastName}`}</h3>
                 {/* {project.organization ? <h4>Organization Name</h4> : <></>} */}
               </div>
             </div>
@@ -279,7 +295,7 @@ function ProjectPage(props) {
                   <FiShare2 className={classes.shareButtonIcon} size={25} />
                   Share
               </button>
-              <Link to={{pathname: `/project/donate/${id}`, state: project}} className={classes.donateLink}>
+              <Link to={{pathname: `/project/donate/${id}`, state: fundraiser}} className={classes.donateLink}>
                 <button className={classes.shareButtonBottom}>
                   <BiDonateHeart className={classes.shareButtonIcon} size={25} />
                   Donate

@@ -136,22 +136,22 @@ function Fundraisers(props) {
       <h3 className={classes.fundraisersTitle}>Top fundraisers</h3>
       <Grid xs={12} className={classes.fundraisers}>
         {
-          projects.map(function(project, index) {
+          projects && projects.map((project, index) => {
             if (index >= 0 && index <= maxIndex)
             return (
               <div className={classes.fundraiser}>
                 <Link to={{
-                  pathname: `/project/${project._id}`,
+                  pathname: `/fundraiser/${project._id}`,
                   state: project
                 }} className={classes.fundraiserHeader}>
                   <div className={classes.fundraiserprimaryImageBox}>
-                    <img className={classes.fundraiserPrimaryImage} src={project.projectDescription.coverImages[0].path} alt={project.projectDescription.coverImages[0].title} />
+                    <img className={classes.fundraiserPrimaryImage} src='https://images.gofundme.com/lfIDh3DRXXBf1GKOXJJ_v04_-y8=/720x405/https://d2g8igdw686xgo.cloudfront.net/53335284_1608117907238589_r.jpeg' alt='children smiling' />
                   </div>
-                  <h3 className={classes.fundraiserLocation}>{project.projectDescription.country}</h3>
-                  <h4 className={classes.fundraiserTitle}>{project.projectName}</h4>
+                  <h3 className={classes.fundraiserLocation}>{project.country}</h3>
+                  <h4 className={classes.fundraiserTitle}>{project.name}</h4>
                 </Link>
                 <div className={classes.fundraiserInfo}>
-                  <p className={classes.fundraiserStory}>{truncateString(project.projectDescription.body)}</p>
+                  <p className={classes.fundraiserStory}>{truncateString(project.story)}</p>
                   <p className={classes.donationProgressTime}>Last donation 8s ago</p>
                   <DonationsProgressBar />
                   <p className={classes.fundraiserCurrentStats}>

@@ -1,41 +1,32 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import decode from 'jwt-decode'
-import { Redirect, Router } from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
+import {connect} from 'react-redux'
 
-const checkAuth = () => {
-  const accessToken = localStorage.getItem('accessToken')
-  const refreshToken = localStorage.getItem('refreshToken')
-  if (!accessToken || !refreshToken) {
-    return false
-  }
+function Authenticate({ component: Component, user, ...rest }) {
+  useEffect(() => {
+    return
+  }, [user.authenticated])
 
-  try {
-    const { exp } = decode(refreshToken)
-    if (exp < new Date().getTime() / 1000) {
-      return false
-    }
-  } catch(e) {
-    return false
-  }
-
-  return true
-}
-
-function Authenticate({ component: Component, ...rest }) {
   return (
-    <Router {...rest} render={props =>(
-      checkAuth ? (
+    <Route {...rest} render={props =>(
+      user.authenticated ? (
         <Component {...props} />
       ) : (
-        // <Redirect to={{ pathname: '/' }} from={props.location}/>
-        <div>Bye bye</div>
+        <Redirect to={{ pathname: '/login', state: {from: props.location} }} />
       )
     )}
     />
   )
 }
 
-export default Authenticate
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Authenticate)
 
 // class Auth {
 //   constructor() {

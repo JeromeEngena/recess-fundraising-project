@@ -1,9 +1,8 @@
-import React, { useContext} from 'react'
+import React, { useState} from 'react'
 import LoginForm from './LoginForm'
 import { makeStyles } from '@material-ui/core/styles'
 import SecondaryFooter from '../SecondaryFooter'
 import SecondaryHeader from '../SecondaryHeader'
-import {UserContext } from '../../../context/Auth'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,15 +12,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function LoginPage() {
-    const { user, setUser } = useContext(UserContext)
+function LoginPage(props) {
 
   const classes = useStyles()
   return (
     <main className={classes.root}>
       <SecondaryHeader path='/register' label='Sign up' />
 
-      <LoginForm userKnowsPassword={true} setUser={setUser}/>
+      <LoginForm userKnowsPassword={true} />
 
       <SecondaryFooter />
     </main>

@@ -244,8 +244,8 @@ function DonateForm(props) {
       const { telephone, total, projectId } = body
       return await axios({
         method: 'post',
-        url: 'http://127.0.0.1:4000/funders/request-to-pay',
-        data: { telephone, total, projectId }
+        url: 'http://127.0.0.1:4000/funders/pay',
+        data: { telephone, totalToPay: total, projectName: projectId }
       })
     }
 
