@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const colors = require('colors')
 const cors = require('cors')
+const path = require('path')
 
 // module configurations 
 const routes = require('./routes')
@@ -22,6 +23,11 @@ app.use(cors())
 app.use('/users', routes.userRoutes)
 app.use('/fundraisers', routes.fundraiserRoutes)
 app.use('/funders', routes.funderRoutes)
+
+// production setup
+if (process.env.NODE_ENV == 'production') {
+  app.use(express.static(path.resolve(__dirname, '../frontend/build')))
+}
 
 // db connections
 mongoose.connect(process.env.DB_URI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true})

@@ -4,7 +4,11 @@
   "description": "The backend api for fundMe",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "build": "cd ../frontend && npm run build",
+    "install-frontend": "cd ../frontend && npm install",
+    "heroku-postbuild": "npm run install-frontend && npm run build",
+    "start": "node index.js",
+    "frontend": "cd ../frontend && npm start"
   },
   "keywords": [
     "fundMe",
