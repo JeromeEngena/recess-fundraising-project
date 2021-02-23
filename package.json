@@ -4,14 +4,14 @@
   "description": "The backend api for fundMe",
   "main": "index.js",
   "scripts": {
-    "build": "cd ../frontend && npm run build",
-    "install-frontend": "cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "install-frontend": "cd frontend && npm install",
     "heroku-postbuild": "npm run install-frontend && npm run build",
     "start": "node index.js",
-    "frontend": "cd ../frontend && npm start"
+    "frontend": "cd frontend && npm start"
   },
   "keywords": [
-    "fundMe",
+    "fundraising",
     "mtn-momo",
     "react",
     "nodejs",
