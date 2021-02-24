@@ -22,6 +22,7 @@ app.use(cors())
 app.use('/users', routes.userRoutes)
 app.use('/fundraisers', routes.fundraiserRoutes)
 app.use('/funders', routes.funderRoutes)
+app.use('/email_subscribers', routes.EmailSubscriberRoutes) 
 
 // db connections
 mongoose.connect(process.env.DB_URI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true})

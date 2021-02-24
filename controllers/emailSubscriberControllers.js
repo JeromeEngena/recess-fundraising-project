@@ -8,24 +8,15 @@ module.exports = {
         return res.status(500).json({message: 'Internal Server Error'})
       if (exists)
         return res.status(404).json({message: 'Email already exists'})
-      bcrypt.encryptData({
-        data: req.body.email,
-        callback: (error, hashedEmail) =>  {
-          if (error)
+      db.createEmailSubscriber({
+        emailSubscriber: {...req.body},
+        callback: (error, registeredEmailSubscriber) => {
+          if (error) 
             return res.status(500).json({message: 'Internal Server Error'})
-          if (!hashedEmail)
-            return res.status(500).json({message: 'Email Not Hashed'})
-          db.createEmailSubscriber({
-            emailSubscriber: {...req.body, email: hashedEmail},
-            callback: (error, registeredEmailSubscriber) => {
-              if (error) 
-                return res.status(500).json({message: 'Internal Server Error'})
-              if (!registeredEmailSubscriber)
-                return res.status(500).json({message: 'Failed to Register Email Subscriber'})
-              if (registeredEmailSubscriber)
-                res.status(201).json({message: 'Email Subscriber Registered'})
-            }
-          })
+          if (!registeredEmailSubscriber)
+            return res.status(500).json({message: 'Failed to Register Email Subscriber'})
+          if (registeredEmailSubscriber)
+            res.status(201).json({message: 'Email Subscriber Registered'})
         }
       })
     }})
@@ -55,6 +46,10 @@ module.exports = {
         }
       })
     } else if (req.body.emailList) {
+      const newEmailList = []
+      req.body.emailList.map(email => {
+        bcrypt.compareWithEncryptedData
+      })
       db.getEmailSubscribers({
         query: {email: {"$in": req.body.emailList}},
         callback: (error, emailSubscribers) => {  
@@ -116,6 +111,13 @@ module.exports = {
 
   },
   deleteEmailSubscriber: (req, res, next) => {
-
+    db.deleteEmailSubscriber({query: {_id:req.params._id}, callback: (error, deletedEmailSubscriber) => {
+      if (error)
+        return res.status(500).json({message: 'Internal Server Error'})
+      if (!edeletedEmailSubscriber)
+        return res.status(404).json({message: 'Email Subscriber Not Found'})
+      if(deletedEmailSubscriber)
+        res.status(200).json(deletedEmailSubscriber)
+    }})
   }
 }
