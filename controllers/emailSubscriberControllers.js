@@ -7,14 +7,14 @@ module.exports = {
       if (error)
         return res.status(500).json({message: 'Internal Server Error'})
       if (exists)
-        return res.status(404).json({message: 'Email already exists'})
+        return res.status(404).json({message: 'Email Already Exists'})
       db.createEmailSubscriber({
         emailSubscriber: {...req.body},
         callback: (error, registeredEmailSubscriber) => {
           if (error) 
             return res.status(500).json({message: 'Internal Server Error'})
           if (!registeredEmailSubscriber)
-            return res.status(500).json({message: 'Failed to Register Email Subscriber'})
+            return res.status(500).json({message: 'Failed To Register Email Subscriber'})
           if (registeredEmailSubscriber)
             res.status(201).json({message: 'Email Subscriber Registered'})
         }

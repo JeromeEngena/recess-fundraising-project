@@ -11,11 +11,7 @@ module.exports = model('Fundraiser', new Schema({
   story: { type: String, required: true },
   images: [{
     path: { type: String, required: true },
-    title: { type: String, required: true },
-    dimensions: {
-      width: { type: Number, required: true },
-      height: { type: Number, required: true } 
-    }
+    title: { type: String, required: true }
   }],
   category: { type: String, required: true, default: 'Personal', enum: fundraiserCategories },
   country: { type: String, required: true, default: 'Uganda' }, 
