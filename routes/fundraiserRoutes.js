@@ -13,5 +13,6 @@ router.post('/deactivate/:_id', Fundraiser.deactivateFundraiser)
 router.post('/verify/:_id', Fundraiser.verifyFundraiser)
 router.post('/current/:_id', Fundraiser.addFunderToFundraiser)
 router.post('/thanks/:_id', Fundraiser.addThanksToFundraiser)
+router.get('/identify-all/:ownerId', Fundraiser.getFundraisersByOwnerId)
 
 module.exports = router
