@@ -25,6 +25,19 @@ module.exports = {
     }})
    },
 
+   getFundraisersByOwnerId: (req, res, next) => {
+    db.getFundraisers({
+      query: {ownerId:req.params.ownerId},
+      callback: (error, fundraisers) => {
+        if (error)
+          return res.status(500).json({message: 'Internal Server Error', error: error.message})
+        if (!fundraisers)
+          return res.status(404).json({message: 'Fundraisers Not Found'})
+        res.status(200).json(fundraisers)
+      }
+    })
+   },
+
    getFundraiserById: (req, res, next) => {
     db.getFundraiserById({query: {_id:req.params._id}, callback: (error, fundraiser) => {
       if (error)
