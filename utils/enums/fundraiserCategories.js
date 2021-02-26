@@ -2,11 +2,11 @@ module.exports = categories = [
   "Personal",
   "Education",
   "Medical",
-  "Children and Youth",
-  "Creatives",
-  "Sports",
-  "Volunteering",
+  // "Children and Youth",
+  // "Creatives",
+  // "Sports",
+  // "Volunteering",
   "In memory",
-  "Animals and Pets",
-  "Nature"
+  // "Animals and Pets",
+  // "Nature"
 ]
