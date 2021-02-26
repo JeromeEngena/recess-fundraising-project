@@ -65,7 +65,7 @@ module.exports = {
             const refreshToken = jwt.generateRefreshToken(serializedUserId)
             res.status(200).json({
               auth: true,
-              userId: user,
+              userId: user._id,
               accessToken: accessToken,
               refreshToken: refreshToken 
             })
